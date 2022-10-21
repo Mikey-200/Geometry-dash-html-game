@@ -6,19 +6,10 @@
     <title>test form</title>
   </head>
   <body>
-    <form class="test" method="post">
+    <form class="test" method="post" action="index.php">
       <input type="text" name="test" value="hg"/>
       <br>
       <input type="submit" name="submit" value="submit"/>
     </form>
-    <? php
-    $x = $_POST["test"];
-    if (isset($x)) {
-    echo "welcome".$x;
-    $y = fopen("name.txt", "w");
-    fwrite($y, $x);
-    fclose($y);
-  }
-    ?>
   </body>
 </html>
