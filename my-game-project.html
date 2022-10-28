@@ -105,6 +105,7 @@
 //time passed is divided by 1000 to get the time at which our animation would run; multiplied by the set speed
       var tp = (Date.now() - t) / 1000;
       t = Date.now();
+
 //clearRect is used here to cover the whole canvas so when an animation runs, it clears the old drawn frame and draws new ones
       context.clearRect(0, 0, 650, 440);
 //score text
