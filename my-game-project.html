@@ -96,6 +96,8 @@
       var oby4 = 150;
       var obx5 = 850;
       var oby5 = 350;
+      var obx6 = 950;
+      var oby6 = 250;
       var objs = 100;
       menus.style.display="block;"
 
@@ -146,6 +148,11 @@
 
       context.beginPath();
       context.rect(obx5, oby5, 50,50);
+      context.fillStyle="black";
+      context.fill();
+
+      context.beginPath();
+      context.rect(obx6, oby6, 50,50);
       context.fillStyle="black";
       context.fill();
 
@@ -216,6 +223,10 @@
         obx5 = (Math.random() * 10) * (Math.random() * 10) + 900;
         oby5 = (Math.random() * 390) + 25;
       }
+      function obj6func() {
+        obx6 = (Math.random() * 10) * (Math.random() * 10) + 990;
+        oby6 = (Math.random() * 390) + 22;
+      }
       if (obx <= 0-50) {
         objfunc();
       }
@@ -230,6 +241,9 @@
       }
       if (obx5 <= 0-50) {
         obj5func();
+      }
+      if (obx6 <= 0-50) {
+        obj6func();
       }
       function stopobj() {
         objs = 0;
@@ -247,6 +261,7 @@
       obx3 -= (objs * tp);
       obx4 -= (objs * tp);
       obx5 -= (objs * tp);
+      obx6 -= (objs * tp);
 //obstacle and player collision conditions
       if (obx <= x + 50 && x <= obx + 50 && oby <= y + 50 && y <= oby + 50) {
         stopobj();
@@ -281,6 +296,14 @@
         menus.style.display="none";
       }
       if (x <= obx5 + 50 && obx5 <= x + 50 && y <= oby5 + 50 && oby5 <= y + 50) {
+        stopobj();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        return gamestart();
+      } else {
+        menus.style.display="none";
+      }
+      if (x <= obx6 + 50 && obx6 <= x + 50 && y <= oby6 + 50 && oby6 <= y + 50) {
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
