@@ -248,7 +248,7 @@
       obx4 -= (objs * tp);
       obx5 -= (objs * tp);
 //obstacle and player collision conditions
-      if (obx <= x + 54 && x <= obx + 50 && oby <= y + 54 && y <= oby + 50) {
+      if (obx <= x + 50 && x <= obx + 50 && oby <= y + 50 && y <= oby + 50) {
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
@@ -256,7 +256,7 @@
       } else {
         menus.style.display="none";
       }
-      if (x <= obx2 + 50 && obx2 <= x + 54 && y <= oby2 + 50 && oby2 <= y + 54) {
+      if (x <= obx2 + 50 && obx2 <= x + 50 && y <= oby2 + 50 && oby2 <= y + 50) {
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
