@@ -36,13 +36,11 @@
         height: 100%;
         background: black;
         opacity: 0.95;
-        display: block;
       }
       #menus > p {
         text-align: center;
         font-size: 30px;
         margin: 50px auto;
-        z-index: 2;
         background: aqua;
         width: 60%;
         height: auto;
@@ -54,10 +52,10 @@
   </head>
   <body>
     <!--game menus-->
-    <div id="menus">
+    <div id="menus" style="display: block;">
       <p id="start">Start</p>
       <p>How to play</p>
-      <p id="score" style="display:none;" ></p>
+      <p id="score" style="visibility: hidden;"></p>
     </div>
     <!--canvas-->
     <canvas id="mygame" width="650" height="440"></canvas>
@@ -78,7 +76,7 @@
       var context = canvas.getContext("2d");
       var t = Date.now();
       var score = 0;
-      var speed = 220;
+      var speed = 250;
       var x = 100;
       var y = 385;
       var coinx = 100;
@@ -99,7 +97,7 @@
       var obx5 = 950;
       var oby5 = 350;
       var objs = 100;
-
+      menus.style.display="block;"
 
     start.onclick = function game() {
 //time passed is divided by 1000 to get the time at which our animation would run; multiplied by the set speed
@@ -236,6 +234,7 @@
       function stopobj() {
         objs = 0;
         speed = 0;
+        menus.style.display="block";
       }
 //coin and player square collision conditions
       if (x <= coinx + 11 && coinx - 11 <= x + 55 && y <= coiny + 11 && coiny - 11 <= y + 55) {
@@ -249,23 +248,46 @@
       obx4 -= (objs * tp);
       obx5 -= (objs * tp);
 //obstacle and player collision conditions
-      if (obx <= x + 55 && x <= obx + 50 && oby <= y + 55 && y <= oby + 55) {
+      if (obx <= x + 54 && x <= obx + 50 && oby <= y + 54 && y <= oby + 50) {
         stopobj();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        return;
+      } else {
+        menus.style.display="none";
       }
-      if (x <= obx2 + 50 && obx2 <= x + 55 && y <= oby2 + 50 && oby2 <= y + 55) {
+      if (x <= obx2 + 50 && obx2 <= x + 54 && y <= oby2 + 50 && oby2 <= y + 54) {
         stopobj();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        return;
+      } else {
+        menus.style.display="none";
       }
-      if (x <= obx3 + 50 && obx3 <= x + 55 && y <= oby3 + 50 && oby3 <= y + 55) {
+      if (x <= obx3 + 50 && obx3 <= x + 50 && y <= oby3 + 50 && oby3 <= y + 50) {
         stopobj();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        return;
+      } else {
+        menus.style.display="none";
       }
-      if (x <= obx4 + 50 && obx4 <= x + 55 && y <= oby4 + 50 && oby4 <= y + 55) {
+      if (x <= obx4 + 50 && obx4 <= x + 50 && y <= oby4 + 50 && oby4 <= y + 50) {
         stopobj();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        return;
+      } else {
+        menus.style.display="none";
       }
-      if (x <= obx5 + 50 && obx5 <= x + 55 && y <= oby5 + 50 && oby5 <= y + 55) {
+      if (x <= obx5 + 50 && obx5 <= x + 50 && y <= oby5 + 50 && oby5 <= y + 50) {
         stopobj();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        return;
+      } else {
+        menus.style.display="none";
       }
-      //other functions
-      menus.style.display="none";
       //animation frame request
       window.requestAnimationFrame(game);
     }
