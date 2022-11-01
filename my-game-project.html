@@ -35,7 +35,7 @@
         width: 100%;
         height: 100%;
         background: black;
-        opacity: 0.95;
+        opacity: 0.97;
       }
       #menus > p {
         text-align: center;
@@ -67,7 +67,7 @@
 
     <script>
 
-    window.onload = function() {
+    window.onload = function gamestart() {
 
       var scoremenu = document.getElementById("score");
       var menus = document.getElementById("menus");
@@ -252,7 +252,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
-        return;
+        return gamestart();
       } else {
         menus.style.display="none";
       }
@@ -260,7 +260,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
-        return;
+        return gamestart();
       } else {
         menus.style.display="none";
       }
@@ -268,7 +268,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
-        return;
+        return gamestart();
       } else {
         menus.style.display="none";
       }
@@ -276,7 +276,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
-        return;
+        return gamestart();
       } else {
         menus.style.display="none";
       }
@@ -284,7 +284,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
-        return;
+        return gamestart();
       } else {
         menus.style.display="none";
       }
