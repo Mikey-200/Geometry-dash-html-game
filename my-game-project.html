@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <title>My game</title>
     <style>
       * {
@@ -48,15 +49,32 @@
         border: 3px solid red;
         border-radius: 5px;
       }
+      #howtoplay {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: 2;
+        background: black;
+        opacity: 0.98;
+        color: white;
+        border-radius: 3px;
+        padding: 10px 10px 10px 10px;
+      }
+      #howtoplay:hover, #menus > p:hover {
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <!--game menus-->
     <div id="menus" style="display: block;">
       <p id="start">Start</p>
-      <p>How to play</p>
-      <p id="score" style="visibility: hidden;"></p>
+      <p id="howto">How to play</p>
+      <p id="score" style="visibility: hidden; cursor:auto;"></p>
     </div>
+    <span id="howtoplay" style="display:none;"> <span style="float:right; font-size:30px;" id="closehowto"><i class="bi bi-x-square-fill"></i></span> <br><br>
+      Use the left, right, up and down buttons to navigate the player square (red square). <br>Eat coins to increase score and try not to bump into any obstacles (black squares) or you loose. <br><br> More updates on the game coming soon.
+    </span>
     <!--canvas-->
     <canvas id="mygame" width="650" height="440"></canvas>
     <!--controls-->
@@ -69,6 +87,8 @@
 
     window.onload = function gamestart() {
 
+      var howto = document.getElementById("howto");
+      var closehowto = document.getElementById("closehowto");
       var scoremenu = document.getElementById("score");
       var menus = document.getElementById("menus");
       var start = document.getElementById("start");
@@ -87,19 +107,25 @@
       var up = document.getElementById("up");
       var down = document.getElementById("down");
       var obx = 750;
-      var oby = 200;
+      var oby = 250;
       var obx2 = 800;
-      var oby2 = 300;
+      var oby2 = 200;
       var obx3 = 900;
       var oby3 = 100;
       var obx4 = 950;
       var oby4 = 150;
       var obx5 = 850;
       var oby5 = 350;
-      var obx6 = 950;
+      var obx6 = 1000;
       var oby6 = 250;
-      var objs = 100;
+      var objs = 125;
       menus.style.display="block;"
+      howto.onclick = function() {
+        document.getElementById("howtoplay").style.display="block";
+      }
+      closehowto.onclick = function() {
+        document.getElementById("howtoplay").style.display="none";
+      }
 
     start.onclick = function game() {
 //time passed is divided by 1000 to get the time at which our animation would run; multiplied by the set speed
@@ -256,6 +282,12 @@
         coinfunc();
       }
 //obstacles' movement
+  if (score >= 10) {
+  objs += 10;
+  }
+  if (score >= 20) {
+  objs += 10;
+  }
       obx -= (objs * tp);
       obx2 -= (objs * tp);
       obx3 -= (objs * tp);
@@ -267,6 +299,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
         return gamestart();
       } else {
         menus.style.display="none";
@@ -275,6 +308,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
         return gamestart();
       } else {
         menus.style.display="none";
@@ -283,6 +317,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
         return gamestart();
       } else {
         menus.style.display="none";
@@ -291,6 +326,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
         return gamestart();
       } else {
         menus.style.display="none";
@@ -299,6 +335,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
         return gamestart();
       } else {
         menus.style.display="none";
@@ -307,6 +344,7 @@
         stopobj();
         scoremenu.style.visibility="visible";
         scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
         return gamestart();
       } else {
         menus.style.display="none";
