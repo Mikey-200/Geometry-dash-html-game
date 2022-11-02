@@ -118,7 +118,7 @@
       var oby5 = 350;
       var obx6 = 1000;
       var oby6 = 250;
-      var objs = 125;
+      var objs = 135;
       menus.style.display="block;"
       howto.onclick = function() {
         document.getElementById("howtoplay").style.display="block";
@@ -282,18 +282,7 @@
         coinfunc();
       }
 //obstacles' movement
-  if (score >= 5) {
-  objs += 5;
-  }
-  if (score >= 10) {
-  objs += 5;
-  }
-  if (score >= 15) {
-  objs += 5;
-  }
-  if (score >= 20) {
-  objs += 5;
-  }
+
       obx -= (objs * tp);
       obx2 -= (objs * tp);
       obx3 -= (objs * tp);
