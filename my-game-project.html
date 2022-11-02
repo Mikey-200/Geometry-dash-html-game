@@ -73,7 +73,7 @@
       <p id="score" style="visibility: hidden; cursor:auto;"></p>
     </div>
     <span id="howtoplay" style="display:none;"> <span style="float:right; font-size:30px;" id="closehowto"><i class="bi bi-x-square-fill"></i></span> <br><br>
-      Use the left, right, up and down buttons to navigate the player square (red square). <br>Eat coins to increase score and try not to bump into any obstacles (black squares) or you loose. <br><br> More updates on the game coming soon.
+      Use the left, right, up and down buttons to navigate the player square (red square). <br>Eat coins to increase score and try not to bump into any obstacles (black squares) or you loose.<br>The higher your score, the more the speed of the obstacles increase. Have fun <br><br> More updates on the game coming soon.
     </span>
     <!--canvas-->
     <canvas id="mygame" width="650" height="440"></canvas>
@@ -235,23 +235,23 @@
       }
       function obj2func() {
         obx2 = (Math.random() * 10) * (Math.random() * 10) + 750;
-        oby2 = (Math.random() * 390) + 26;
+        oby2 = (Math.random() * 390) + 25;
       }
       function obj3func() {
         obx3 = (Math.random() * 10) * (Math.random() * 10) + 800;
-        oby3 = (Math.random() * 390) + 25;
+        oby3 = (Math.random() * 390) + 20;
       }
       function obj4func() {
         obx4 = (Math.random() * 10) * (Math.random() * 10) + 850;
-        oby4 = (Math.random() * 390) + 20;
+        oby4 = (Math.random() * 390) + 26;
       }
       function obj5func() {
         obx5 = (Math.random() * 10) * (Math.random() * 10) + 900;
-        oby5 = (Math.random() * 390) + 25;
+        oby5 = (Math.random() * 390) + 20;
       }
       function obj6func() {
         obx6 = (Math.random() * 10) * (Math.random() * 10) + 990;
-        oby6 = (Math.random() * 390) + 22;
+        oby6 = (Math.random() * 390) + 25;
       }
       if (obx <= 0-50) {
         objfunc();
@@ -282,11 +282,17 @@
         coinfunc();
       }
 //obstacles' movement
+  if (score >= 5) {
+  objs += 5;
+  }
   if (score >= 10) {
-  objs += 10;
+  objs += 5;
+  }
+  if (score >= 15) {
+  objs += 5;
   }
   if (score >= 20) {
-  objs += 10;
+  objs += 5;
   }
       obx -= (objs * tp);
       obx2 -= (objs * tp);
