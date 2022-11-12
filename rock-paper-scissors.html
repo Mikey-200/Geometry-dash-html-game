@@ -2,16 +2,124 @@
 <html lang="en-NG" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Rock, paper, Scissors</title>
     <style>
       * {
         box-sizing: border-box;
+      }
+      body, html {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, black, grey);
+      }
+      .gamecontainer {
+        width: 100%;
+        height: 60%;
+        padding: 0.5%;
+        position: relative;
+      }
+      .computer {
+        position: absolute;
+        left: 12px;
+      }
+      .player {
+        position: absolute;
+        right: 10px;
+      }
+      .scoresquare {
+        position: absolute;
+        top: 2px;
+        width: 99%;
+        height: 90%;
+        border: 5px solid white;
+        border-radius: 5px;
+      }
+      .computerscore, .playerscore {
+        font-size: 50px;
+        color: red;
+        position: absolute;
+        top: 50px;
+      }
+      .vs {
+        position: absolute;
+        top: 20px;
+        font-size: 30px;
+        left: 46%;
+        color: aqua;
+      }
+      .round {
+        position: absolute;
+        top: 100px;
+        font-size: 20px;
+        left: 43%;
+        color: white;
+      }
+      .buttons {
+        margin-top: 80px;
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: space-around;
+      }
+      .buttons > p {
+        width: 33.3333%;
+        height: auto;
+        margin: 0 auto;
+      }
+      .roundsr {
+        font-size: 15px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
       }
     </style>
   </head>
   <body>
     <div class="gamecontainer">
+      <div class="computer" id="computer">
+        <div class="computericon">
 
+        </div>
+      </div>
+      <p class="computerscore" style="left: 42px;">0</p>
+      <div class="player" id="player">
+        <div class="playericon">
+
+        </div>
+      </div>
+      <p class="playerscore" style="right: 40px;">0</p>
+      <div class="scoresquare">
+
+      </div>
+      <p class="vs">VS</p>
+      <p class="round">Round <span id="round"> 1</span> </p>
     </div>
+    <p class="roundsr">Rounds remaining: <span id="roundsr"> 19</span> </p>
+    <div class="buttons">
+      <p id="rock"></p>
+      <p id="paper"></p>
+      <p id="scissors"></p>
+    </div>
+    <script>
+      windows.onload = function () {
+        var rock = document.getElementById("rock");
+        var paper = document.getElementById("paper");
+        var scissors = document.getElementById("scissors");
+        var choice;
+
+        rock.onclick = function rock() {
+          choice = rock;
+        }
+        paper.onclick = function paper() {
+          choice = paper;
+        }
+        scissors.onclick = function scissors() {
+          choice = scissors;
+        }
+      }
+    </script>
   </body>
 </html>
