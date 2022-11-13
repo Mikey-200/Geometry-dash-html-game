@@ -68,6 +68,9 @@
         height: auto;
         margin: 0 auto;
       }
+      .buttons > p:hover {
+        cursor: pointer;
+      }
       .roundsr {
         font-size: 15px;
         color: white;
@@ -99,25 +102,50 @@
     </div>
     <p class="roundsr">Rounds remaining: <span id="roundsr"> 19</span> </p>
     <div class="buttons">
-      <p id="rock"></p>
-      <p id="paper"></p>
-      <p id="scissors"></p>
+      <p id="rock">r</p>
+      <p id="paper">p</p>
+      <p id="scissors">s</p>
     </div>
     <script>
-      windows.onload = function () {
+      window.onload = function () {
+        var compscore = document.getElementById("computerscore");
+        var playscore = document.getElementById("playerscore");
         var rock = document.getElementById("rock");
         var paper = document.getElementById("paper");
         var scissors = document.getElementById("scissors");
-        var choice;
+        var player;
+        var compchoice = Math.floor(Math.random() * 10);
+        var comp;
+        console.log(compchoice);
+
+        if (compchoice == 0 ||compchoice == 1 || compchoice == 2 || compchoice == 3 ) {
+          comp = rock;
+        }
+        if (compchoice == 4 ||compchoice == 5 || compchoice == 6) {
+          comp = paper;
+        }
+        if (compchoice == 7 ||compchoice == 8 || compchoice == 9) {
+          comp = scissors;
+        }
 
         rock.onclick = function rock() {
-          choice = rock;
+          player = rock;
         }
         paper.onclick = function paper() {
-          choice = paper;
+          player = paper;
         }
         scissors.onclick = function scissors() {
-          choice = scissors;
+          player = scissors;
+        }
+
+        if (comp == rock && player == scissors) {
+          compscore += 1;
+        }
+        if (comp == rock && player == rock) {
+          compscore += 0;
+        }
+        if (comp == rock && player == paper) {
+          playscore += 1;
         }
       }
     </script>
