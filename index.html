@@ -6,10 +6,36 @@
     <title>test form</title>
   </head>
   <body>
-    <form class="test" method="post" action="index.php">
-      <input type="text" name="test" value="hg"/>
+    <?php
+    $name = $site = "";
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+          $name = test_input($_POST["name"]);
+          $site = test_input($_POST["site"]);
+        }
+
+        function test_input($data) {
+          $data = trim($data);
+          $data = stripslashes($data);
+          $data = htmlspecialchars($data);
+          return $data;
+        }
+      ?>
+
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+      <input type="text" name="name" value="hg">
+      <input type="website" name="site" value="www.b.com">
       <br>
       <input type="submit" name="submit" value="submit"/>
     </form>
+
+    <?php
+    echo "<br>";
+    echo "<h3>your input</h3>";
+    echo $name;
+    echo "<br>";
+    echo $site;
+    ?>
+
   </body>
 </html>

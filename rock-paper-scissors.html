@@ -107,47 +107,72 @@
       <p id="scissors">s</p>
     </div>
     <script>
-      window.onload = function () {
         var compscore = document.getElementById("computerscore");
         var playscore = document.getElementById("playerscore");
         var rock = document.getElementById("rock");
         var paper = document.getElementById("paper");
         var scissors = document.getElementById("scissors");
         var player;
-        var compchoice = Math.floor(Math.random() * 10);
+        var compchoice;
         var comp;
-        console.log(compchoice);
 
-        if (compchoice == 0 ||compchoice == 1 || compchoice == 2 || compchoice == 3 ) {
-          comp = rock;
-        }
-        if (compchoice == 4 ||compchoice == 5 || compchoice == 6) {
-          comp = paper;
-        }
-        if (compchoice == 7 ||compchoice == 8 || compchoice == 9) {
-          comp = scissors;
+        function compchoice() {
+          compchoice = Math.floor(Math.random() * 10);
+          console.log(compchoice);
+
+          if (compchoice == 0 ||compchoice == 1 || compchoice == 2 || compchoice == 3 ) {
+            comp = rock;
+          }
+          if (compchoice == 4 ||compchoice == 5 || compchoice == 6) {
+            comp = paper;
+          }
+          if (compchoice == 7 ||compchoice == 8 || compchoice == 9) {
+            comp = scissors;
+          }
         }
 
         rock.onclick = function rock() {
+          compchoice();
           player = rock;
+          if (player == rock && comp == scissors) {
+            playscore += 1;
+          }
+          if (player == rock && comp == rock) {
+            playscore += 0;
+            compscore += 0;
+          }
+          if (player == rock && comp == paper) {
+            compscore += 1;
+          }
         }
         paper.onclick = function paper() {
+          compchoice();
           player = paper;
+          if (player == paper && comp == scissors) {
+            compscore += 1;
+          }
+          if (player == paper && comp == rock) {
+            playscore += 0;
+          }
+          if (player == paper && comp == paper) {
+            compscore += 0;
+            playscore += 0;
+          }
         }
         scissors.onclick = function scissors() {
+          compchoice();
           player = scissors;
+          if (player == scissors && comp == scissors) {
+            compscore += 0;
+            playscore += 0;
+          }
+          if (player == scissors && comp == rock) {
+            compscore += 1;
+          }
+          if (player == scissors && comp == paper) {
+            playscore += 1;
+          }
         }
-
-        if (comp == rock && player == scissors) {
-          compscore += 1;
-        }
-        if (comp == rock && player == rock) {
-          compscore += 0;
-        }
-        if (comp == rock && player == paper) {
-          playscore += 1;
-        }
-      }
-    </script>
+  </script>
   </body>
 </html>
