@@ -1,305 +1,713 @@
 <!DOCTYPE html>
+
 <html lang="en" dir="ltr">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans,wght@1,500&display=swap" rel="stylesheet">
-  <title>Geometry game</title>
-  <style>
-    * {
-      font-family: 'Open Sans', sans-serif;
-      box-sizing: border-box;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    body, html {
-      margin: 0;
-      padding: 0;
-    }
-    #mygame {
-      width: 100%;
-      height: 50%;
-      margin-top: 20px;
-      background: aqua;
-    }
-    button {
-      width: 50px;
-      height: 50px;
-      padding: 5px;
-      border-radius: 3px;
-      background: black;
-      color: white;
-      opacity: 0.7;
-    }
-    #menus {
-      position: fixed;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      background: black;
-      opacity: 0.97;
-    }
-    #menus > p {
-      text-align: center;
-      font-size: 30px;
-      margin: 50px auto;
-      background: aqua;
-      width: 60%;
-      height: auto;
-      padding: 20px;
-      border: 3px solid red;
-      border-radius: 5px;
-    }
-    #howtoplay {
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      z-index: 2;
-      background: black;
-      opacity: 0.98;
-      color: white;
-      border-radius: 3px;
-      padding: 10px 10px 10px 10px;
-    }
-    #howtoplay:hover, #menus > p:hover {
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <!--game menus-->
-  <div id="menus" style="display: block;">
-    <p id="start">Start</p>
-    <p id="howto">How to play</p>
-    <p id="score" style="visibility: hidden; cursor:auto;"></p>
-  </div>
-  <span id="howtoplay" style="display:none;"> <span style="float:right; font-size:30px;" id="closehowto"><i class="bi bi-x-square-fill"></i></span> <br><br>
-    Use the left, right, up and down buttons to navigate the player square (red square). <br>Eat coins to increase score and try not to bump into any obstacles (black squares) or you loose.<br>The higher your score, the more the speed of the obstacles increase. Have fun <br><br> More updates on the game coming soon.
-  </span>
-  <!--canvas-->
-  <canvas id="mygame" width="650" height="440"></canvas>
-  <!--controls-->
-  <button id="left" style="margin-left:20px; margin-top:50px;">left</button>
-  <button id="right" style="margin-left:20px; margin-top:50px;">right</button>
-  <button id="up" style="float:right; margin-top:10px; margin-right:30px;">up</button><br>
-  <button id="down" style="float:right; margin-right:30px;">down</button>
 
-  <script>
+  <head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans,wght@1,500&display=swap" rel="stylesheet">
+
+    <title>Geometry game</title>
+
+    <style>
+
+      * {
+
+        font-family: 'Open Sans', sans-serif;
+
+        box-sizing: border-box;
+
+        user-select: none;
+
+        -webkit-user-select: none;
+
+      }
+
+      body, html {
+
+        margin: 0;
+
+        padding: 0;
+
+      }
+
+      #mygame {
+
+        width: 100%;
+
+        height: 50%;
+
+        margin-top: 20px;
+
+        background: aqua;
+
+      }
+
+      button {
+
+        width:50px;
+
+        height: 50px;
+
+        padding: 5px;
+
+        border-radius: 3px;
+
+        background: black;
+
+        color: white;
+
+        opacity: 0.7;
+
+      }
+
+      #menus {
+
+        position: fixed;
+
+        z-index: 1;
+
+        width: 100%;
+
+        height: 100%;
+
+        background: black;
+
+        opacity: 0.97;
+
+      }
+
+      #menus > p {
+
+        text-align: center;
+
+        font-size: 30px;
+
+        margin: 50px auto;
+
+        background: aqua;
+
+        width: 60%;
+
+        height: auto;
+
+        padding: 20px;
+
+        border: 3px solid red;
+
+        border-radius: 5px;
+
+      }
+
+      #howtoplay {
+
+        width: 100%;
+
+        height: 100%;
+
+        position: fixed;
+
+        z-index: 2;
+
+        background: black;
+
+        opacity: 0.98;
+
+        color: white;
+
+        border-radius: 3px;
+
+        padding: 10px 10px 10px 10px;
+
+      }
+
+      #howtoplay:hover, #menus > p:hover {
+
+        cursor: pointer;
+
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!--game menus-->
+
+    <div id="menus" style="display: block;">
+
+      <p id="start">Start</p>
+
+      <p id="howto">How to play</p>
+
+      <p id="score" style="visibility: hidden; cursor:auto;"></p>
+
+    </div>
+
+    <span id="howtoplay" style="display:none;"> <span style="float:right; font-size:30px;" id="closehowto"><i class="bi bi-x-square-fill"></i></span> <br><br>
+
+      Use the left, right, up and down buttons to navigate the player square (red square). <br>Eat coins to increase score and try not to bump into any obstacles (black squares) or you loose.<br>The higher your score, the more the speed of the obstacles increase. Have fun <br><br> More updates on the game coming soon.
+
+    </span>
+
+    <!--canvas-->
+
+    <canvas id="mygame" width="650" height="440"></canvas>
+
+    <!--controls-->
+
+    <button id="left" style="margin-left:20px; margin-top:50px;">left</button>
+
+    <button id="right" style="margin-left:20px; margin-top:50px;">right</button>
+
+    <button id="up" style="float:right; margin-top:10px; margin-right:30px;">up</button><br>
+
+    <button id="down"style="float:right; margin-right:30px;">down</button>
+
+
+
+    <script>
+
+
+
     window.onload = function gamestart() {
+
+
+
       var howto = document.getElementById("howto");
+
       var closehowto = document.getElementById("closehowto");
+
       var scoremenu = document.getElementById("score");
+
       var menus = document.getElementById("menus");
+
       var start = document.getElementById("start");
+
       var canvas = document.getElementById("mygame");
+
       var context = canvas.getContext("2d");
+
       var t = Date.now();
+
       var score = 0;
+
       var speed = 250;
+
       var x = 100;
+
       var y = 385;
+
       var coinx = 100;
+
       var coiny = 100;
+
       var dir = 0;
+
       var left = document.getElementById("left");
+
       var right = document.getElementById("right");
+
       var up = document.getElementById("up");
+
       var down = document.getElementById("down");
+
       var obx = 750;
+
       var oby = 250;
+
       var obx2 = 800;
+
       var oby2 = 200;
+
       var obx3 = 900;
+
       var oby3 = 100;
+
       var obx4 = 950;
+
       var oby4 = 150;
+
       var obx5 = 850;
+
       var oby5 = 350;
+
       var obx6 = 1000;
+
       var oby6 = 250;
-      var objs = 200;
-      menus.style.display = "block";
-      howto.onclick = function () {
-        document.getElementById("howtoplay").style.display = "block";
+
+      var objs = 140;
+
+      menus.style.display="block;"
+
+      howto.onclick = function() {
+
+        document.getElementById("howtoplay").style.display="block";
+
       }
-      closehowto.onclick = function () {
-        document.getElementById("howtoplay").style.display = "none";
+
+      closehowto.onclick = function() {
+
+        document.getElementById("howtoplay").style.display="none";
+
       }
 
-      start.onclick = function game() {
-        menus.style.display = "none"; // Hide the menu when the game starts
 
-        // Main game loop function
-        function gameLoop() {
-          // Calculate the time passed since the last frame
-          var tp = (Date.now() - t) / 1000;
-          t = Date.now();
 
-          // Clear the canvas
-          context.clearRect(0, 0, 650, 440);
+    start.onclick = function game() {
 
-          // Draw the game elements (player, coin, obstacles, etc.)
-          context.font = "23px sans serif";
-          context.fillStyle = "red";
-          context.fillText("score: " + score, 10, 20);
+//time passed is divided by 1000 to get the time at which our animation would run; multiplied by the set speed
 
-          context.beginPath();
-          context.rect(x, y, 50, 50);
-          context.fillStyle = "red";
-          context.fill();
-          context.lineWidth = "5";
-          context.strokeStyle = "black";
-          context.stroke();
+      var tp = (Date.now() - t) / 1000;
 
-          context.beginPath();
-          context.arc(coinx, coiny, 10, 0, 2 * Math.PI);
-          context.fillStyle = "gold";
-          context.fill();
+      t = Date.now();
 
-          context.beginPath();
-          context.rect(obx, oby, 50, 50);
-          context.fillStyle = "black";
-          context.fill();
 
-          context.beginPath();
-          context.rect(obx2, oby2, 50, 50);
-          context.fillStyle = "black";
-          context.fill();
 
-          context.beginPath();
-          context.rect(obx3, oby3, 50, 50);
-          context.fillStyle = "black";
-          context.fill();
+//clearRect is used here to cover the whole canvas so when an animation runs, it clears the old drawn frame and draws new ones
 
-          context.beginPath();
-          context.rect(obx4, oby4, 50, 50);
-          context.fillStyle = "black";
-          context.fill();
+      context.clearRect(0, 0, 650, 440);
 
-          context.beginPath();
-          context.rect(obx5, oby5, 50, 50);
-          context.fillStyle = "black";
-          context.fill();
+//score text
 
-          context.beginPath();
-          context.rect(obx6, oby6, 50, 50);
-          context.fillStyle = "black";
-          context.fill();
+      context.font="23px sans serif";
 
-          // Update the game elements and logic
-          movePlayer();
-          moveObstacles();
-          checkCollisions();
+      context.fillStyle="red";
 
-          // Request the next animation frame to continue the game loop
-          window.requestAnimationFrame(gameLoop);
+      context.fillText("score: "+ score, 10, 20);
+
+//players square drawing
+
+      context.beginPath();
+
+      context.rect(x, y, 50,50);
+
+      context.fillStyle="red";
+
+      context.fill();
+
+      context.lineWidth="5";
+
+      context.strokeStyle="black";
+
+      context.stroke();
+
+//coin drawing
+
+      context.beginPath();
+
+      context.arc(coinx, coiny, 10, 0, 2 * Math.PI);
+
+      context.fillStyle="gold";
+
+      context.fill();
+
+//obstacles drawing
+
+      context.beginPath();
+
+      context.rect(obx, oby, 50,50);
+
+      context.fillStyle="black";
+
+      context.fill();
+
+
+
+      context.beginPath();
+
+      context.rect(obx2, oby2, 50,50);
+
+      context.fillStyle="black";
+
+      context.fill();
+
+
+
+      context.beginPath();
+
+      context.rect(obx3, oby3, 50,50);
+
+      context.fillStyle="black";
+
+      context.fill();
+
+
+
+      context.beginPath();
+
+      context.rect(obx4, oby4, 50,50);
+
+      context.fillStyle="black";
+
+      context.fill();
+
+
+
+      context.beginPath();
+
+      context.rect(obx5, oby5, 50,50);
+
+      context.fillStyle="black";
+
+      context.fill();
+
+
+
+      context.beginPath();
+
+      context.rect(obx6, oby6, 50,50);
+
+      context.fillStyle="black";
+
+      context.fill();
+
+
+
+//click events for movement controls with direction
+
+            left.onmousedown = function() { dir = 1; }
+
+            right.onmousedown = function() { dir = 2; }
+
+            up.onmousedown = function() { dir = 3; }
+
+            down.onmousedown = function() { dir = 4; }
+
+
+
+            left.onmouseup = function() { dir = 0; }
+
+            right.onmouseup = function() { dir = 0; }
+
+            up.onmouseup = function() { dir = 0; }
+
+            down.onmouseup = function() { dir = 0; }
+
+
+
+            left.ontouchstart = function() { dir = 1; }
+
+            right.ontouchstart = function() { dir = 2; }
+
+            up.ontouchstart = function() { dir = 3; }
+
+            down.ontouchstart = function() { dir = 4; }
+
+
+
+            left.ontouchend = function() { dir = 0; }
+
+            right.ontouchend = function() { dir = 0; }
+
+            up.ontouchend = function() { dir = 0; }
+
+            down.ontouchend = function() { dir = 0; }
+
+//conditions to correspond with the movement buttons
+
+      if (dir == 1) {
+
+        if (x >= 0 + 5) {
+
+          x -= (speed * tp);
+
         }
 
-        // Start the game loop
-        window.requestAnimationFrame(gameLoop);
-
-        // Functions for handling player movement and obstacle animation
-        function movePlayer() {
-          // Movement controls with direction
-          if (dir == 1 && x >= 0 + 5) {
-            x -= speed * tp;
-          } else if (dir == 2 && x <= 650 - 55) {
-            x += speed * tp;
-          } else if (dir == 3 && y >= 0 + 6) {
-            y -= speed * tp;
-          } else if (dir == 4 && y <= 440 - 55) {
-            y += speed * tp;
-          }
-        }
-
-        function moveObstacles() {
-          obx -= objs * tp;
-          obx2 -= objs * tp;
-          obx3 -= objs * tp;
-          obx4 -= objs * tp;
-          obx5 -= objs * tp;
-          obx6 -= objs * tp;
-
-          // Reset the obstacles when they go off-screen
-          if (obx <= 0 - 50) {
-            obx = 750;
-            oby = Math.random() * 390 + 20;
-          }
-          if (obx2 <= 0 - 50) {
-            obx2 = 800;
-            oby2 = Math.random() * 390 + 25;
-          }
-          if (obx3 <= 0 - 50) {
-            obx3 = 900;
-            oby3 = Math.random() * 390 + 20;
-          }
-          if (obx4 <= 0 - 50) {
-            obx4 = 950;
-            oby4 = Math.random() * 390 + 26;
-          }
-          if (obx5 <= 0 - 50) {
-            obx5 = 850;
-            oby5 = Math.random() * 390 + 20;
-          }
-          if (obx6 <= 0 - 50) {
-            obx6 = 1000;
-            oby6 = Math.random() * 390 + 25;
-          }
-        }
-
-        function checkCollisions() {
-          // Check collision with the coin and update score
-          if (x <= coinx + 11 && coinx - 11 <= x + 55 && y <= coiny + 11 && coiny - 11 <= y + 55) {
-            score += 1;
-            coinx = Math.round(Math.random() * 450) + 20;
-            coiny = Math.round(Math.random() * 400) + 30;
-          }
-
-          // Check collision with obstacles and end the game
-          if (x <= obx + 50 && obx <= x + 50 && y <= oby + 50 && oby <= y + 50 ||
-            x <= obx2 + 50 && obx2 <= x + 50 && y <= oby2 + 50 && oby2 <= y + 50 ||
-            x <= obx3 + 50 && obx3 <= x + 50 && y <= oby3 + 50 && oby3 <= y + 50 ||
-            x <= obx4 + 50 && obx4 <= x + 50 && y <= oby4 + 50 && oby4 <= y + 50 ||
-            x <= obx5 + 50 && obx5 <= x + 50 && y <= oby5 + 50 && oby5 <= y + 50 ||
-            x <= obx6 + 50 && obx6 <= x + 50 && y <= oby6 + 50 && oby6 <= y + 50) {
-            stopGame();
-          }
-        }
-
-        function stopGame() {
-          objs = 0;
-          speed = 0;
-          menus.style.display = "block";
-          scoremenu.style.visibility = "visible";
-          scoremenu.innerHTML = "score: " + score;
-          start.innerHTML = "Restart";
-        }
-
-        // Event listeners for movement controls
-        left.onmousedown = function () { dir = 1; }
-        right.onmousedown = function () { dir = 2; }
-        up.onmousedown = function () { dir = 3; }
-        down.onmousedown = function () { dir = 4; }
-
-        left.onmouseup = function () { dir = 0; }
-        right.onmouseup = function () { dir = 0; }
-        up.onmouseup = function () { dir = 0; }
-        down.onmouseup = function () { dir = 0; }
-
-        left.ontouchstart = function () { dir = 1; }
-        right.ontouchstart = function () { dir = 2; }
-        up.ontouchstart = function () { dir = 3; }
-        down.ontouchstart = function () { dir = 4; }
-
-        left.ontouchend = function () { dir = 0; }
-        right.ontouchend = function () { dir = 0; }
-        up.ontouchend = function () { dir = 0; }
-        down.ontouchend = function () { dir = 0; }
       }
+
+      if (dir == 2) {
+
+        if (x <= 650 - 55) {
+
+          x += (speed * tp);
+
+        }
+
+      }
+
+      if (dir == 3) {
+
+        if (y >= 0 + 6) {
+
+          y -= (speed * tp);
+
+        }
+
+      }
+
+      if (dir == 4) {
+
+        if (y <= 440 - 55) {
+
+          y += (speed * tp);
+
+        }
+
+      }
+
+//function for the coin randomization
+
+      function coinfunc() {
+
+        coinx = Math.round((Math.random() * 450) + 20);
+
+        coiny = Math.round((Math.random() * 400) + 30);
+
+      }
+
+//functions and conditions for obstacles' randomization
+
+      function objfunc() {
+
+        obx = (Math.random() * 10) * (Math.random() * 10) + 700;
+
+        oby = (Math.random() * 390) + 20;
+
+      }
+
+      function obj2func() {
+
+        obx2 = (Math.random() * 10) * (Math.random() * 10) + 750;
+
+        oby2 = (Math.random() * 390) + 25;
+
+      }
+
+      function obj3func() {
+
+        obx3 = (Math.random() * 10) * (Math.random() * 10) + 800;
+
+        oby3 = (Math.random() * 390) + 20;
+
+      }
+
+      function obj4func() {
+
+        obx4 = (Math.random() * 10) * (Math.random() * 10) + 850;
+
+        oby4 = (Math.random() * 390) + 26;
+
+      }
+
+      function obj5func() {
+
+        obx5 = (Math.random() * 10) * (Math.random() * 10) + 900;
+
+        oby5 = (Math.random() * 390) + 20;
+
+      }
+
+      function obj6func() {
+
+        obx6 = (Math.random() * 10) * (Math.random() * 10) + 990;
+
+        oby6 = (Math.random() * 390) + 25;
+
+      }
+
+      if (obx <= 0-50) {
+
+        objfunc();
+
+      }
+
+      if (obx2 <= 0-50) {
+
+        obj2func();
+
+      }
+
+      if (obx3 <= 0-50) {
+
+        obj3func();
+
+      }
+
+      if (obx4 <= 0-50) {
+
+        obj4func();
+
+      }
+
+      if (obx5 <= 0-50) {
+
+        obj5func();
+
+      }
+
+      if (obx6 <= 0-50) {
+
+        obj6func();
+
+      }
+
+      function stopobj() {
+
+        objs = 0;
+
+        speed = 0;
+
+        menus.style.display="block";
+
+      }
+
+//coin and player square collision conditions
+
+      if (x <= coinx + 11 && coinx - 11 <= x + 55 && y <= coiny + 11 && coiny - 11 <= y + 55) {
+
+        score += 1;
+
+        coinfunc();
+
+      }
+
+//obstacles' movement
+
+
+
+      obx -= (objs * tp);
+
+      obx2 -= (objs * tp);
+
+      obx3 -= (objs * tp);
+
+      obx4 -= (objs * tp);
+
+      obx5 -= (objs * tp);
+
+      obx6 -= (objs * tp);
+
+//obstacle and player collision conditions
+
+      if (obx <= x + 50 && x <= obx + 50 && oby <= y + 50 && y <= oby + 50) {
+
+        stopobj();
+
+        scoremenu.style.visibility="visible";
+
+        scoremenu.innerHTML="score: " + score;
+
+        start.innerHTML="Restart";
+
+        return gamestart();
+
+      } else {
+
+        menus.style.display="none";
+
+      }
+
+      if (x <= obx2 + 50 && obx2 <= x + 50 && y <= oby2 + 50 && oby2 <= y + 50) {
+
+        stopobj();
+
+        scoremenu.style.visibility="visible";
+
+        scoremenu.innerHTML="score: " + score;
+
+        start.innerHTML="Restart";
+
+        return gamestart();
+
+      } else {
+
+        menus.style.display="none";
+
+      }
+
+      if (x <= obx3 + 50 && obx3 <= x + 50 && y <= oby3 + 50 && oby3 <= y + 50) {
+
+        stopobj();
+
+        scoremenu.style.visibility="visible";
+
+        scoremenu.innerHTML="score: " + score;
+
+        start.innerHTML="Restart";
+
+        return gamestart();
+
+      } else {
+
+        menus.style.display="none";
+
+      }
+
+      if (x <= obx4 + 50 && obx4 <= x + 50 && y <= oby4 + 50 && oby4 <= y + 50) {
+
+        stopobj();
+
+        scoremenu.style.visibility="visible";
+
+        scoremenu.innerHTML="score: " + score;
+
+        start.innerHTML="Restart";
+
+        return gamestart();
+
+      } else {
+
+        menus.style.display="none";
+
+      }
+
+      if (x <= obx5 + 50 && obx5 <= x + 50 && y <= oby5 + 50 && oby5 <= y + 50) {
+
+        stopobj();
+
+        scoremenu.style.visibility="visible";
+
+        scoremenu.innerHTML="score: " + score;
+
+        start.innerHTML="Restart";
+
+        return gamestart();
+
+      } else {
+
+        menus.style.display="none";
+
+      }
+
+      if (x <= obx6 + 50 && obx6 <= x + 50 && y <= oby6 + 50 && oby6 <= y + 50) {
+
+        stopobj();
+
+        scoremenu.style.visibility="visible";
+
+        scoremenu.innerHTML="score: " + score;
+
+        start.innerHTML="Restart";
+
+        return gamestart();
+
+      } else {
+
+        menus.style.display="none";
+
+      }
+
+      //animation frame request
+
+      window.requestAnimationFrame(game);
+
     }
-  </script>
-</body>
+
+  }
+
+    </script>
+
+  </body>
+
 </html>
