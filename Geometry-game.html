@@ -89,7 +89,6 @@
 
   <script>
     window.onload = function gamestart() {
-
       var howto = document.getElementById("howto");
       var closehowto = document.getElementById("closehowto");
       var scoremenu = document.getElementById("score");
@@ -131,63 +130,155 @@
       }
 
       start.onclick = function game() {
-        menus.style.display = "none"; // Hide the menu when game starts
+        menus.style.display = "none"; // Hide the menu when the game starts
 
-        //time passed is divided by 1000 to get the time at which our animation would run; multiplied by the set speed
-        var tp = (Date.now() - t) / 1000;
-        t = Date.now();
+        // Main game loop function
+        function gameLoop() {
+          // Calculate the time passed since the last frame
+          var tp = (Date.now() - t) / 1000;
+          t = Date.now();
 
-        //clearRect is used here to cover the whole canvas so when an animation runs, it clears the old drawn frame and draws new ones
-        context.clearRect(0, 0, 650, 440);
-        //score text
-        context.font = "23px sans serif";
-        context.fillStyle = "red";
-        context.fillText("score: " + score, 10, 20);
-        //players square drawing
-        context.beginPath();
-        context.rect(x, y, 50, 50);
-        context.fillStyle = "red";
-        context.fill();
-        context.lineWidth = "5";
-        context.strokeStyle = "black";
-        context.stroke();
-        //coin drawing
-        context.beginPath();
-        context.arc(coinx, coiny, 10, 0, 2 * Math.PI);
-        context.fillStyle = "gold";
-        context.fill();
-        //obstacles drawing
-        context.beginPath();
-        context.rect(obx, oby, 50, 50);
-        context.fillStyle = "black";
-        context.fill();
+          // Clear the canvas
+          context.clearRect(0, 0, 650, 440);
 
-        context.beginPath();
-        context.rect(obx2, oby2, 50, 50);
-        context.fillStyle = "black";
-        context.fill();
+          // Draw the game elements (player, coin, obstacles, etc.)
+          context.font = "23px sans serif";
+          context.fillStyle = "red";
+          context.fillText("score: " + score, 10, 20);
 
-        context.beginPath();
-        context.rect(obx3, oby3, 50, 50);
-        context.fillStyle = "black";
-        context.fill();
+          context.beginPath();
+          context.rect(x, y, 50, 50);
+          context.fillStyle = "red";
+          context.fill();
+          context.lineWidth = "5";
+          context.strokeStyle = "black";
+          context.stroke();
 
-        context.beginPath();
-        context.rect(obx4, oby4, 50, 50);
-        context.fillStyle = "black";
-        context.fill();
+          context.beginPath();
+          context.arc(coinx, coiny, 10, 0, 2 * Math.PI);
+          context.fillStyle = "gold";
+          context.fill();
 
-        context.beginPath();
-        context.rect(obx5, oby5, 50, 50);
-        context.fillStyle = "black";
-        context.fill();
+          context.beginPath();
+          context.rect(obx, oby, 50, 50);
+          context.fillStyle = "black";
+          context.fill();
 
-        context.beginPath();
-        context.rect(obx6, oby6, 50, 50);
-        context.fillStyle = "black";
-        context.fill();
+          context.beginPath();
+          context.rect(obx2, oby2, 50, 50);
+          context.fillStyle = "black";
+          context.fill();
 
-        //click events for movement controls with direction
+          context.beginPath();
+          context.rect(obx3, oby3, 50, 50);
+          context.fillStyle = "black";
+          context.fill();
+
+          context.beginPath();
+          context.rect(obx4, oby4, 50, 50);
+          context.fillStyle = "black";
+          context.fill();
+
+          context.beginPath();
+          context.rect(obx5, oby5, 50, 50);
+          context.fillStyle = "black";
+          context.fill();
+
+          context.beginPath();
+          context.rect(obx6, oby6, 50, 50);
+          context.fillStyle = "black";
+          context.fill();
+
+          // Update the game elements and logic
+          movePlayer();
+          moveObstacles();
+          checkCollisions();
+
+          // Request the next animation frame to continue the game loop
+          window.requestAnimationFrame(gameLoop);
+        }
+
+        // Start the game loop
+        window.requestAnimationFrame(gameLoop);
+
+        // Functions for handling player movement and obstacle animation
+        function movePlayer() {
+          // Movement controls with direction
+          if (dir == 1 && x >= 0 + 5) {
+            x -= speed * tp;
+          } else if (dir == 2 && x <= 650 - 55) {
+            x += speed * tp;
+          } else if (dir == 3 && y >= 0 + 6) {
+            y -= speed * tp;
+          } else if (dir == 4 && y <= 440 - 55) {
+            y += speed * tp;
+          }
+        }
+
+        function moveObstacles() {
+          obx -= objs * tp;
+          obx2 -= objs * tp;
+          obx3 -= objs * tp;
+          obx4 -= objs * tp;
+          obx5 -= objs * tp;
+          obx6 -= objs * tp;
+
+          // Reset the obstacles when they go off-screen
+          if (obx <= 0 - 50) {
+            obx = 750;
+            oby = Math.random() * 390 + 20;
+          }
+          if (obx2 <= 0 - 50) {
+            obx2 = 800;
+            oby2 = Math.random() * 390 + 25;
+          }
+          if (obx3 <= 0 - 50) {
+            obx3 = 900;
+            oby3 = Math.random() * 390 + 20;
+          }
+          if (obx4 <= 0 - 50) {
+            obx4 = 950;
+            oby4 = Math.random() * 390 + 26;
+          }
+          if (obx5 <= 0 - 50) {
+            obx5 = 850;
+            oby5 = Math.random() * 390 + 20;
+          }
+          if (obx6 <= 0 - 50) {
+            obx6 = 1000;
+            oby6 = Math.random() * 390 + 25;
+          }
+        }
+
+        function checkCollisions() {
+          // Check collision with the coin and update score
+          if (x <= coinx + 11 && coinx - 11 <= x + 55 && y <= coiny + 11 && coiny - 11 <= y + 55) {
+            score += 1;
+            coinx = Math.round(Math.random() * 450) + 20;
+            coiny = Math.round(Math.random() * 400) + 30;
+          }
+
+          // Check collision with obstacles and end the game
+          if (x <= obx + 50 && obx <= x + 50 && y <= oby + 50 && oby <= y + 50 ||
+            x <= obx2 + 50 && obx2 <= x + 50 && y <= oby2 + 50 && oby2 <= y + 50 ||
+            x <= obx3 + 50 && obx3 <= x + 50 && y <= oby3 + 50 && oby3 <= y + 50 ||
+            x <= obx4 + 50 && obx4 <= x + 50 && y <= oby4 + 50 && oby4 <= y + 50 ||
+            x <= obx5 + 50 && obx5 <= x + 50 && y <= oby5 + 50 && oby5 <= y + 50 ||
+            x <= obx6 + 50 && obx6 <= x + 50 && y <= oby6 + 50 && oby6 <= y + 50) {
+            stopGame();
+          }
+        }
+
+        function stopGame() {
+          objs = 0;
+          speed = 0;
+          menus.style.display = "block";
+          scoremenu.style.visibility = "visible";
+          scoremenu.innerHTML = "score: " + score;
+          start.innerHTML = "Restart";
+        }
+
+        // Event listeners for movement controls
         left.onmousedown = function () { dir = 1; }
         right.onmousedown = function () { dir = 2; }
         up.onmousedown = function () { dir = 3; }
@@ -207,138 +298,6 @@
         right.ontouchend = function () { dir = 0; }
         up.ontouchend = function () { dir = 0; }
         down.ontouchend = function () { dir = 0; }
-        //conditions to correspond with the movement buttons
-        if (dir == 1) {
-          if (x >= 0 + 5) {
-            x -= (speed * tp);
-          }
-        }
-        if (dir == 2) {
-          if (x <= 650 - 55) {
-            x += (speed * tp);
-          }
-        }
-        if (dir == 3) {
-          if (y >= 0 + 6) {
-            y -= (speed * tp);
-          }
-        }
-        if (dir == 4) {
-          if (y <= 440 - 55) {
-            y += (speed * tp);
-          }
-        }
-        //function for the coin randomization
-        function coinfunc() {
-          coinx = Math.round((Math.random() * 450) + 20);
-          coiny = Math.round((Math.random() * 400) + 30);
-        }
-        //functions and conditions for obstacles' randomization
-        function objfunc() {
-          obx = (Math.random() * 10) * (Math.random() * 10) + 700;
-          oby = (Math.random() * 390) + 20;
-        }
-        function obj2func() {
-          obx2 = (Math.random() * 10) * (Math.random() * 10) + 750;
-          oby2 = (Math.random() * 390) + 25;
-        }
-        function obj3func() {
-          obx3 = (Math.random() * 10) * (Math.random() * 10) + 800;
-          oby3 = (Math.random() * 390) + 20;
-        }
-        function obj4func() {
-          obx4 = (Math.random() * 10) * (Math.random() * 10) + 850;
-          oby4 = (Math.random() * 390) + 26;
-        }
-        function obj5func() {
-          obx5 = (Math.random() * 10) * (Math.random() * 10) + 900;
-          oby5 = (Math.random() * 390) + 20;
-        }
-        function obj6func() {
-          obx6 = (Math.random() * 10) * (Math.random() * 10) + 990;
-          oby6 = (Math.random() * 390) + 25;
-        }
-        if (obx <= 0 - 50) {
-          objfunc();
-        }
-        if (obx2 <= 0 - 50) {
-          obj2func();
-        }
-        if (obx3 <= 0 - 50) {
-          obj3func();
-        }
-        if (obx4 <= 0 - 50) {
-          obj4func();
-        }
-        if (obx5 <= 0 - 50) {
-          obj5func();
-        }
-        if (obx6 <= 0 - 50) {
-          obj6func();
-        }
-        function stopobj() {
-          objs = 0;
-          speed = 0;
-          menus.style.display = "block";
-        }
-        //coin and player square collision conditions
-        if (x <= coinx + 11 && coinx - 11 <= x + 55 && y <= coiny + 11 && coiny - 11 <= y + 55) {
-          score += 1;
-          coinfunc();
-        }
-        //obstacles' movement
-
-        obx -= (objs * tp);
-        obx2 -= (objs * tp);
-        obx3 -= (objs * tp);
-        obx4 -= (objs * tp);
-        obx5 -= (objs * tp);
-        obx6 -= (objs * tp);
-        //obstacle and player collision conditions
-        if (obx <= x + 50 && x <= obx + 50 && oby <= y + 50 && y <= oby + 50) {
-          stopobj();
-          scoremenu.style.visibility = "visible";
-          scoremenu.innerHTML = "score: " + score;
-          start.innerHTML = "Restart";
-          return;
-        }
-        if (x <= obx2 + 50 && obx2 <= x + 50 && y <= oby2 + 50 && oby2 <= y + 50) {
-          stopobj();
-          scoremenu.style.visibility = "visible";
-          scoremenu.innerHTML = "score: " + score;
-          start.innerHTML = "Restart";
-          return;
-        }
-        if (x <= obx3 + 50 && obx3 <= x + 50 && y <= oby3 + 50 && oby3 <= y + 50) {
-          stopobj();
-          scoremenu.style.visibility = "visible";
-          scoremenu.innerHTML = "score: " + score;
-          start.innerHTML = "Restart";
-          return;
-        }
-        if (x <= obx4 + 50 && obx4 <= x + 50 && y <= oby4 + 50 && oby4 <= y + 50) {
-          stopobj();
-          scoremenu.style.visibility = "visible";
-          scoremenu.innerHTML = "score: " + score;
-          start.innerHTML = "Restart";
-          return;
-        }
-        if (x <= obx5 + 50 && obx5 <= x + 50 && y <= oby5 + 50 && oby5 <= y + 50) {
-          stopobj();
-          scoremenu.style.visibility = "visible";
-          scoremenu.innerHTML = "score: " + score;
-          start.innerHTML = "Restart";
-          return;
-        }
-        if (x <= obx6 + 50 && obx6 <= x + 50 && y <= oby6 + 50 && oby6 <= y + 50) {
-          stopobj();
-          scoremenu.style.visibility = "visible";
-          scoremenu.innerHTML = "score: " + score;
-          start.innerHTML = "Restart";
-          return;
-        }
-        //animation frame request
-        window.requestAnimationFrame(game);
       }
     }
   </script>
