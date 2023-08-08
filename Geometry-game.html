@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans,wght@1,500&display=swap" rel="stylesheet">
+    <title>Geometry game</title>
+    <style>
+      * {
+        font-family: 'Open Sans', sans-serif;
+        box-sizing: border-box;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      body, html {
+        margin: 0;
+        padding: 0;
+        background-color: rgb(220, 227, 233);
+      }
+      #mygame {
+        width: 100%;
+        height: 70%;
+        background: aqua;
+      }
+      button {
+        width:50px;
+        height: 50px;
+        padding: 5px;
+        border: 2px outset red;
+        border-radius: 3px;
+        background: aqua;
+        color: rgb(228, 17, 17);
+        opacity: 0.7;
+      }
+      #menus {
+        position: fixed;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background: black;
+        opacity: 0.97;
+      }
+      #menus > p {
+        text-align: center;
+        font-size: 30px;
+        margin: 50px auto;
+        background: aqua;
+        width: 60%;
+        height: auto;
+        padding: 20px;
+        border: 3px solid red;
+        border-radius: 5px;
+      }
+      #howtoplay {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: 2;
+        background: black;
+        opacity: 0.98;
+        border-radius: 3px;
+        padding: 10px 10px 10px 10px;
+      }
+      #howtoplay:hover, #menus > p:hover {
+        cursor: pointer;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <!--game menus-->
+    <span style="text-align: center; text-shadow: 1.5px 1.5px 1px black; padding: 8px; color: red; background-color: aqua; opacity: .7; display: block; font-size: 40px; box-shadow: 2px 2px 5px rgb(105, 85, 85); border: 2px outset red; border-radius: 4px; margin-bottom: 2px;">Geometry Rush</span>
+    <div id="menus" style="display: block;">
+      <p id="start">Start</p>
+      <p id="howto">How to play</p> 
+      <p id="bgvolume">
+        <label for="bgvolumeslider">Volume</label>
+        <input type="range" id="bgvolumeslider" min="0" max="1" step="0.2" value="1">
+      </p>
+      <p id="score" style="visibility: hidden; cursor:auto;"></p>
+    </div>
+    <span id="howtoplay" style="display:none; color: rgb(151, 211, 211);">  
+    <span style="padding: 5px; background-color: aqua; color: red; border: 2px outset red; display: block; border-radius: 5px;">
+      Use the left, right, up and down buttons to navigate the player square (red square). <br>Eat coins to increase score and try not to bump into any obstacles (black squares) or you loose.<br>The higher your score, the more the speed of the obstacles increase. Have fun <br><br> More updates on the game coming soon.<br><br>
+      <span style="margin-top:10px; float: right;  color: black; border-radius: 5px; padding: 8px; background-color: aqua; font-size:15px; border: 2px outset rgb(199, 57, 57);" id="closehowto"><b style="color: red;">close</b></span>
+    </span>
+    </span>
+    <!--canvas-->
+    <canvas id="mygame" width="750" height="540"></canvas>
+    <!--controls-->
+    <button id="left" style="margin-left:20px; margin-top:50px;">left</button>
+    <button id="right" style="margin-left:20px; margin-top:50px;">right</button>
+    <button id="up" style="float:right; margin-top:10px; margin-right:30px;">up</button><br>
+    <button id="down"style="float:right; margin-right:30px;">down</button>
+
+    <audio id="clicktone" src="clicktone.wav" ></audio>
+    <audio id="eatcointone" src="eatcointone.wav"></audio>
+    <audio id="gamebackgroundsound" src="backgroundmusic.mp3" loop ></audio>
+    <audio id="collisiontone" src="collisiontone.wav"></audio>
+
+    <script>
+
+
+      
+    window.onload = function gamestart() {
+
+
+      var eatcointone = document.getElementById("eatcointone");
+      var howto = document.getElementById("howto");
+      var closehowto = document.getElementById("closehowto");
+      var scoremenu = document.getElementById("score");
+      var menus = document.getElementById("menus");
+      var start = document.getElementById("start");
+      var canvas = document.getElementById("mygame");
+      var context = canvas.getContext("2d");
+      var t = Date.now();
+      var score = 0;
+      var speed = 250;
+      var x = 100;
+      var y = 455;
+      var coinx = 100;
+      var coiny = 100;
+      var dir = 0;
+      var left = document.getElementById("left");
+      var right = document.getElementById("right");
+      var up = document.getElementById("up");
+      var down = document.getElementById("down");
+      var obx = 750;
+      var oby = 250;
+      var obx2 = 800;
+      var oby2 = 200;
+      var obx3 = 900;
+      var oby3 = 100;
+      var obx4 = 950;
+      var oby4 = 150;
+      var obx5 = 850;
+      var oby5 = 350;
+      var obx6 = 1000;
+      var oby6 = 250;
+      var objs = 135;
+      menus.style.display="block;"
+      howto.onclick = function() {
+        playclicksound();
+        document.getElementById("howtoplay").style.display="block";
+      }
+      closehowto.onclick = function() {
+        playclicksound();
+        document.getElementById("howtoplay").style.display="none";
+      }
+
+//game sounds
+      function playbackgroundsound() {
+      var volumeslider = document.getElementById("bgvolumeslider");
+      var bgsound = document.getElementById("gamebackgroundsound");
+      volumeslider.addEventListener("input", function() {
+      bgsound.volume = volumeslider.value;
+      });
+      bgsound.currentTime = 0;
+      bgsound.play();
+      }
+      function pausebackgroundsound() {
+      var pbgsound = document.getElementById("gamebackgroundsound");
+      pbgsound.pause();
+      }
+      function playclicksound() {
+      var clicktone = document.getElementById("clicktone");
+      clicktone.currentTime = 0; 
+      clicktone.play();
+      }
+      function playcollisionsound() {
+      var collisiontone = document.getElementById("collisiontone");
+      collisiontone.currentTime = 0; 
+      collisiontone.play();
+      }
+      function playcoinsound() {
+      var eatcointone = document.getElementById("eatcointone");
+      eatcointone.currentTime = 0;
+      eatcointone.play();
+      }
+      
+//gamestart function
+      start.onclick = function () {
+        playclicksound();
+      playbackgroundsound();
+        game();
+      }
+    
+    function game() {
+//time passed is divided by 1000 to get the time at which our animation would run; multiplied by the set speed
+      var tp = (Date.now() - t) / 1000;
+      t = Date.now();
+
+//clearRect is used here to cover the whole canvas so when an animation runs, it clears the old drawn frame and draws new ones
+      context.clearRect(0, 0, 750, 540);
+//score text
+      context.font="23px sans serif";
+      context.fillStyle="red";
+      context.fillText("score: "+ score, 10, 20);
+//players square drawing
+      context.beginPath();
+      context.rect(x, y, 50,50);
+      context.fillStyle="red";
+      context.fill();
+      context.lineWidth="5";
+      context.strokeStyle="black";
+      context.stroke();
+//coin drawing
+      context.beginPath();
+      context.arc(coinx, coiny, 12, 0, 2 * Math.PI);
+      context.fillStyle="gold";
+      context.fill();
+      context.lineWidth="2";
+      context.strokeStyle="black";
+      context.stroke();
+//obstacles drawing
+      context.beginPath();
+      context.rect(obx, oby, 50,50);
+      context.fillStyle="black";
+      context.fill();
+
+      context.beginPath();
+      context.rect(obx2, oby2, 50,50);
+      context.fillStyle="black";
+      context.fill();
+
+      context.beginPath();
+      context.rect(obx3, oby3, 50,50);
+      context.fillStyle="black";
+      context.fill();
+
+      context.beginPath();
+      context.rect(obx4, oby4, 50,50);
+      context.fillStyle="black";
+      context.fill();
+
+      context.beginPath();
+      context.rect(obx5, oby5, 50,50);
+      context.fillStyle="black";
+      context.fill();
+
+      context.beginPath();
+      context.rect(obx6, oby6, 50,50);
+      context.fillStyle="black";
+      context.fill();
+
+//click events for movement controls with direction
+            left.onmousedown = function() { dir = 1; }
+            right.onmousedown = function() { dir = 2; }
+            up.onmousedown = function() { dir = 3; }
+            down.onmousedown = function() { dir = 4; }
+
+            left.onmouseup = function() { dir = 0; }
+            right.onmouseup = function() { dir = 0; }
+            up.onmouseup = function() { dir = 0; }
+            down.onmouseup = function() { dir = 0; }
+
+            left.ontouchstart = function() { dir = 1; }
+            right.ontouchstart = function() { dir = 2; }
+            up.ontouchstart = function() { dir = 3; }
+            down.ontouchstart = function() { dir = 4; }
+
+            left.ontouchend = function() { dir = 0; }
+            right.ontouchend = function() { dir = 0; }
+            up.ontouchend = function() { dir = 0; }
+            down.ontouchend = function() { dir = 0; }
+//conditions to correspond with the movement buttons
+      if (dir == 1) {
+        if (x >= 0 + 5) {
+          x -= (speed * tp);
+        }
+      }
+      if (dir == 2) {
+        if (x <= 750 - 55) {
+          x += (speed * tp);
+        }
+      }
+      if (dir == 3) {
+        if (y >= 0 + 6) {
+          y -= (speed * tp);
+        }
+      }
+      if (dir == 4) {
+        if (y <= 540 - 55) {
+          y += (speed * tp);
+        }
+      }
+//function for the coin randomization
+      function coinfunc() {
+        coinx = Math.round((Math.random() * 550) + 20);
+        coiny = Math.round((Math.random() * 500) + 30);
+      }
+//functions and conditions for obstacles' randomization
+      function objfunc() {
+        obx = (Math.random() * 10) * (Math.random() * 10) + 750;
+        oby = (Math.random() * 490) + 20;
+      }
+      function obj2func() {
+        obx2 = (Math.random() * 10) * (Math.random() * 10) + 900;
+        oby2 = (Math.random() * 490) + 25;
+      }
+      function obj3func() {
+        obx3 = (Math.random() * 10) * (Math.random() * 10) + 850;
+        oby3 = (Math.random() * 490) + 20;
+      }
+      function obj4func() {
+        obx4 = (Math.random() * 10) * (Math.random() * 10) + 800;
+        oby4 = (Math.random() * 490) + 26;
+      }
+      function obj5func() {
+        obx5 = (Math.random() * 10) * (Math.random() * 10) + 950;
+        oby5 = (Math.random() * 490) + 20;
+      }
+      function obj6func() {
+        obx6 = (Math.random() * 10) * (Math.random() * 10) + 1000;
+        oby6 = (Math.random() * 490) + 25;
+      }
+      if (obx <= 0-50) {
+        objfunc();
+      }
+      if (obx2 <= 0-50) {
+        obj2func();
+      }
+      if (obx3 <= 0-50) {
+        obj3func();
+      }
+      if (obx4 <= 0-50) {
+        obj4func();
+      }
+      if (obx5 <= 0-50) {
+        obj5func();
+      }
+      if (obx6 <= 0-50) {
+        obj6func();
+      }
+      function stopobj() {
+        objs = 0;
+        speed = 0;
+        menus.style.display="block";
+      }
+//coin and player square collision conditions
+      if (x <= coinx + 11 && coinx - 11 <= x + 55 && y <= coiny + 11 && coiny - 11 <= y + 55) {
+        score += 1;
+        playcoinsound();
+        coinfunc();
+      }
+//obstacles' movement
+
+      obx -= (objs * tp);
+      obx2 -= (objs * tp);
+      obx3 -= (objs * tp);
+      obx4 -= (objs * tp);
+      obx5 -= (objs * tp);
+      obx6 -= (objs * tp);
+//obstacle and player collision conditions
+      if (obx <= x + 50 && x <= obx + 50 && oby <= y + 50 && y <= oby + 50) {
+        pausebackgroundsound();
+        stopobj();
+        playcollisionsound();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
+        return gamestart();
+      } else {
+        menus.style.display="none";
+      }
+      if (x <= obx2 + 50 && obx2 <= x + 50 && y <= oby2 + 50 && oby2 <= y + 50) {
+        pausebackgroundsound();
+        stopobj();
+        playcollisionsound();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
+        return gamestart();
+      } else {
+        menus.style.display="none";
+      }
+      if (x <= obx3 + 50 && obx3 <= x + 50 && y <= oby3 + 50 && oby3 <= y + 50) {
+        pausebackgroundsound();
+        stopobj();
+        playcollisionsound();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
+        return gamestart();
+      } else {
+        menus.style.display="none";
+      }
+      if (x <= obx4 + 50 && obx4 <= x + 50 && y <= oby4 + 50 && oby4 <= y + 50) {
+        pausebackgroundsound();
+        stopobj();
+        playcollisionsound();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
+        return gamestart();
+      } else {
+        menus.style.display="none";
+      }
+      if (x <= obx5 + 50 && obx5 <= x + 50 && y <= oby5 + 50 && oby5 <= y + 50) {
+        pausebackgroundsound();
+        stopobj();
+        playcollisionsound();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
+        return gamestart();
+      } else {
+        menus.style.display="none";
+      }
+      if (x <= obx6 + 50 && obx6 <= x + 50 && y <= oby6 + 50 && oby6 <= y + 50) {
+        pausebackgroundsound();
+        stopobj();
+        playcollisionsound();
+        scoremenu.style.visibility="visible";
+        scoremenu.innerHTML="score: " + score;
+        start.innerHTML="Restart";
+        return gamestart();
+      } else {
+        menus.style.display="none";
+      }
+      
+      //animation frame request
+      window.requestAnimationFrame(game);
+    }
+  }
+  
+    </script>
+  </body>
+</html>
