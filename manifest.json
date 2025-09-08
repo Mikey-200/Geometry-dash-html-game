@@ -1,0 +1,21 @@
+{
+    "name": "Geometry Rush",
+    "short_name": "GeoRush",
+    "description": "A fast-paced mobile game where you dodge obstacles and collect coins!",
+    "start_url": "/",
+    "display": "fullscreen",
+    "background_color": "#00FFFF",
+    "theme_color": "#00FFFF",
+    "icons": [
+        {
+            "src": "/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
