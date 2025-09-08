@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#00FFFF">
+    <meta name="description" content="Geometry Rush - A fast-paced mobile game!">
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,18 +35,24 @@
             max-height: 540px;
             margin: 0 auto;
             background: aqua;
+            touch-action: none;
         }
 
         .control-button {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             margin: 10px;
             border: 2px outset red;
-            border-radius: 5px;
+            border-radius: 8px;
             background: aqua;
             color: rgb(228, 17, 17);
-            font-size: 16px;
+            font-size: 18px;
             touch-action: manipulation;
+            transition: transform 0.1s;
+        }
+
+        .control-button:active {
+            transform: scale(0.95);
         }
 
         #controls {
@@ -51,6 +60,7 @@
             bottom: 10px;
             width: 100%;
             text-align: center;
+            z-index: 5;
         }
 
         #menus, #howtoplay, #pausedtextcontainer {
@@ -59,24 +69,30 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.97);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 10;
             display: none;
             text-align: center;
             padding: 20px;
+            transition: opacity 0.3s ease;
         }
 
         #menus p, #howtoplay span, #pausedtextcontainer span {
             background: aqua;
             color: red;
             border: 3px solid red;
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 15px;
             margin: 15px auto;
-            width: 80%;
+            width: 90%;
             max-width: 400px;
             font-size: 18px;
             cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #menus p:hover, #pausedtextcontainer span:hover {
+            transform: scale(1.05);
         }
 
         #howtoplay span {
@@ -91,31 +107,33 @@
             color: black;
             border: 2px outset red;
             font-size: 14px;
+            border-radius: 5px;
         }
 
         #gamename {
             text-align: center;
             text-shadow: 1.5px 1.5px black;
-            padding: 8px;
+            padding: 10px;
             color: red;
             background: aqua;
-            opacity: 0.7;
-            font-size: 36px;
+            opacity: 0.8;
+            font-size: 40px;
             border: 3px outset red;
-            border-radius: 5px;
-            margin: 5px auto;
+            border-radius: 8px;
+            margin: 10px auto;
             display: block;
             width: fit-content;
+            transition: opacity 0.3s ease;
         }
 
         #ingamescore, #pause, #resume {
             position: fixed;
-            padding: 10px;
+            padding: 12px;
             background: aqua;
             border: 2px outset red;
-            border-radius: 5px;
+            border-radius: 8px;
             color: red;
-            font-size: 16px;
+            font-size: 18px;
         }
 
         #ingamescore { top: 10px; left: 10px; }
@@ -134,6 +152,13 @@
             align-items: center;
             justify-content: center;
             z-index: 20;
+            font-size: 24px;
+        }
+
+        .particle {
+            position: absolute;
+            background: gold;
+            border-radius: 50%;
         }
 
         @media (max-width: 600px) {
@@ -142,23 +167,51 @@
                 height: 100vh;
             }
             .control-button {
-                width: 50px;
-                height: 50px;
-                font-size: 14px;
+                width: 60px;
+                height: 60px;
+                font-size: 16px;
             }
             #gamename {
-                font-size: 28px;
+                font-size: 32px;
+            }
+            #menus p, #howtoplay span, #pausedtextcontainer span {
+                font-size: 16px;
+            }
+        }
+
+        @media (orientation: portrait) {
+            #rotate-device {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: black;
+                color: white;
+                align-items: center;
+                justify-content: center;
+                z-index: 30;
+                font-size: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (orientation: landscape) {
+            #rotate-device {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <div id="loading">Loading...</div>
+    <div id="loading">Loading Geometry Rush...</div>
+    <div id="rotate-device">Please rotate your device to landscape mode.</div>
     <div id="ingamemenus">
         <span id="gamename">Geometry Rush</span>
-        <span id="ingamescore" style="display: none;">score: <b id="scorenumber">0</b></span>
-        <span id="pause" style="display: none;">|&nbsp;|</span>
-        <span id="resume" style="display: none;">|&nbsp;|</span>
+        <span id="ingamescore" style="display: none;">Score: <b id="scorenumber">0</b></span>
+        <span id="pause" style="display: none;">⏸</span>
+        <span id="resume" style="display: none;">▶</span>
         <div id="pausedtextcontainer" style="display: none;">
             <span id="gamepausedtext">Game Paused</span>
             <span id="pausedscore"></span>
@@ -177,9 +230,9 @@
     </div>
     <div id="howtoplay" style="display: none; color: rgb(151, 211, 211);">
         <span>
-            Use the left, right, up, and down buttons (or arrow keys on desktop) to navigate the red square.<br>
-            Collect coins to increase your score and avoid black obstacles to survive.<br>
-            The game speed increases with your score. Have fun!<br><br>
+            Swipe or use buttons (or arrow keys on desktop) to move the red square.<br>
+            Collect gold coins to increase your score and avoid black obstacles.<br>
+            The game gets faster as you score. Enjoy!<br><br>
             More updates coming soon.<br><br>
             <span id="closehowto"><b style="color: red;">Close</b></span>
         </span>
@@ -191,10 +244,10 @@
         <button class="control-button" id="up">Up</button>
         <button class="control-button" id="down">Down</button>
     </div>
-    <audio id="clicktone" src="clicktone.wav"></audio>
-    <audio id="eatcointone" src="eatcointone.wav"></audio>
-    <audio id="gamebackgroundsound" src="backgroundmusic.mp3" loop></audio>
-    <audio id="collisiontone" src="collisiontone.wav"></audio>
+    <audio id="clicktone" src="/clicktone.wav"></audio>
+    <audio id="eatcointone" src="/eatcointone.wav"></audio>
+    <audio id="gamebackgroundsound" src="/backgroundmusic.mp3" loop></audio>
+    <audio id="collisiontone" src="/collisiontone.wav"></audio>
 
     <script>
         (function () {
@@ -241,8 +294,17 @@
                 direction: 0,
                 isPaused: false,
                 isGameRunning: false,
-                lastTime: Date.now()
+                lastTime: Date.now(),
+                particles: [],
+                fixedDeltaTime: 1 / 60 // 60 FPS
             };
+
+            // PWA Service Worker
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker.register("/sw.js").catch(err => console.error("Service Worker registration failed:", err));
+                });
+            }
 
             // Canvas setup
             function resizeCanvas() {
@@ -258,9 +320,11 @@
                 elements.canvas.height = height;
                 elements.canvas.style.width = `${width}px`;
                 elements.canvas.style.height = `${height}px`;
+                gameState.player.y = elements.canvas.height - 85;
             }
 
             window.addEventListener("resize", resizeCanvas);
+            screen.orientation.lock?.("landscape").catch(() => {});
             resizeCanvas();
 
             // Audio handling
@@ -277,10 +341,36 @@
                 elements.bgsound.volume = elements.bgvolumeslider.value;
             });
 
-            function playSound(sound) {
+            function playSound(sound, vibrate = false) {
                 sound.currentTime = 0;
                 sound.play().catch(() => {});
+                if (vibrate && navigator.vibrate) navigator.vibrate(50);
             }
+
+            // Swipe controls
+            let touchStartX = 0, touchStartY = 0;
+            elements.canvas.addEventListener("touchstart", e => {
+                e.preventDefault();
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            });
+
+            elements.canvas.addEventListener("touchmove", e => {
+                e.preventDefault();
+                const deltaX = e.touches[0].clientX - touchStartX;
+                const deltaY = e.touches[0].clientY - touchStartY;
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    gameState.direction = deltaX > 20 ? 2 : deltaX < -20 ? 1 : gameState.direction;
+                } else {
+                    gameState.direction = deltaY > 20 ? 4 : deltaY < -20 ? 3 : gameState.direction;
+                }
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            });
+
+            elements.canvas.addEventListener("touchend", () => {
+                gameState.direction = 0;
+            });
 
             // Game controls
             function setupControls() {
@@ -316,7 +406,6 @@
                 buttons.up.addEventListener("touchend", () => handleInput(0, false));
                 buttons.down.addEventListener("touchend", () => handleInput(0, false));
 
-                // Keyboard support
                 window.addEventListener("keydown", e => {
                     if (e.key === "ArrowLeft") handleInput(1, true);
                     if (e.key === "ArrowRight") handleInput(2, true);
@@ -325,6 +414,38 @@
                 });
                 window.addEventListener("keyup", e => {
                     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) handleInput(0, false);
+                });
+            }
+
+            // Particle effects
+            function createParticles(x, y) {
+                for (let i = 0; i < 10; i++) {
+                    gameState.particles.push({
+                        x,
+                        y,
+                        vx: (Math.random() - 0.5) * 100,
+                        vy: (Math.random() - 0.5) * 100,
+                        size: Math.random() * 5 + 2,
+                        life: 0.5
+                    });
+                }
+            }
+
+            function updateParticles(deltaTime) {
+                gameState.particles = gameState.particles.filter(p => p.life > 0);
+                gameState.particles.forEach(p => {
+                    p.x += p.vx * deltaTime;
+                    p.y += p.vy * deltaTime;
+                    p.life -= deltaTime;
+                });
+            }
+
+            function renderParticles() {
+                gameState.particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, 2 * Math.PI);
+                    ctx.fillStyle = `rgba(255, 215, 0, ${p.life / 0.5})`;
+                    ctx.fill();
                 });
             }
 
@@ -343,11 +464,7 @@
                 return x1 < x2 + w2 && x2 < x1 + w1 && y1 < y2 + h2 && y2 < y1 + h1;
             }
 
-            function updateGame() {
-                const now = Date.now();
-                const deltaTime = (now - gameState.lastTime) / 1000;
-                gameState.lastTime = now;
-
+            function updateGame(deltaTime) {
                 if (gameState.isPaused || !gameState.isGameRunning) return;
 
                 // Player movement
@@ -361,9 +478,13 @@
                 if (checkCollision(gameState.player.x, gameState.player.y, 50, 50, gameState.coin.x - 12, gameState.coin.y - 12, 24, 24)) {
                     gameState.score++;
                     elements.scorenumber.textContent = gameState.score;
-                    playSound(elements.eatcointone);
+                    playSound(elements.eatcointone, true);
+                    createParticles(gameState.coin.x, gameState.coin.y);
                     randomizeCoin();
-                    gameState.objspeed += 10; // Increase difficulty
+                    gameState.objspeed += 5;
+                    if (gameState.score % 10 === 0 && gameState.obstacles.length < 10) {
+                        gameState.obstacles.push({ x: elements.canvas.width + 100, y: Math.random() * (elements.canvas.height - 50) + 25 });
+                    }
                 }
 
                 // Obstacle movement and collision
@@ -371,9 +492,12 @@
                     ob.x -= gameState.objspeed * deltaTime;
                     if (ob.x < -50) randomizeObstacle(i);
                     if (checkCollision(gameState.player.x, gameState.player.y, 50, 50, ob.x, ob.y, 50, 50)) {
+                        playSound(elements.collisiontone, true);
                         endGame();
                     }
                 });
+
+                updateParticles(deltaTime);
             }
 
             function renderGame() {
@@ -404,10 +528,17 @@
                     ctx.fillStyle = "black";
                     ctx.fill();
                 });
+
+                // Draw particles
+                renderParticles();
             }
 
             function gameLoop() {
-                updateGame();
+                const now = Date.now();
+                const deltaTime = Math.min((now - gameState.lastTime) / 1000, gameState.fixedDeltaTime);
+                gameState.lastTime = now;
+
+                updateGame(deltaTime);
                 renderGame();
                 if (gameState.isGameRunning) requestAnimationFrame(gameLoop);
             }
@@ -416,13 +547,22 @@
                 unlockAudio();
                 playSound(elements.bgsound);
                 elements.canvas.requestFullscreen?.();
+                screen.orientation.lock?.("landscape").catch(() => {});
                 gameState.isGameRunning = true;
                 gameState.isPaused = false;
                 gameState.score = 0;
                 gameState.objspeed = 150;
                 gameState.speed = 250;
                 gameState.player = { x: 100, y: elements.canvas.height - 85 };
-                gameState.obstacles.forEach((_, i) => randomizeObstacle(i));
+                gameState.particles = [];
+                gameState.obstacles = [
+                    { x: 750, y: 250 },
+                    { x: 800, y: 200 },
+                    { x: 900, y: 100 },
+                    { x: 950, y: 150 },
+                    { x: 850, y: 350 },
+                    { x: 1000, y: 250 }
+                ];
                 randomizeCoin();
                 elements.menus.style.display = "none";
                 elements.gamename.style.display = "none";
@@ -434,7 +574,6 @@
             }
 
             function endGame() {
-                playSound(elements.collisiontone);
                 elements.bgsound.pause();
                 gameState.isGameRunning = false;
                 elements.menus.style.display = "block";
@@ -458,6 +597,7 @@
                 gameState.speed = 250;
                 gameState.player = { x: 100, y: elements.canvas.height - 85 };
                 gameState.direction = 0;
+                gameState.particles = [];
                 elements.scorenumber.textContent = "0";
             }
 
@@ -506,7 +646,36 @@
                 elements.highscorenumber.textContent = gameState.highscore;
                 elements.menus.style.display = "block";
                 setupControls();
-                setTimeout(() => elements.loading.style.display = "none", 1000);
+
+                // Preload audio assets
+                const sounds = [elements.bgsound, elements.clicktone, elements.eatcointone, elements.collisiontone];
+                let loadedCount = 0;
+                const totalAssets = sounds.length;
+
+                function onAssetLoad() {
+                    loadedCount++;
+                    if (loadedCount >= totalAssets || Date.now() - gameState.lastTime > 3000) {
+                        elements.loading.style.display = "none";
+                        console.log("Assets loaded or timeout reached");
+                    }
+                }
+
+                sounds.forEach(sound => {
+                    sound.addEventListener("canplaythrough", onAssetLoad, { once: true });
+                    sound.addEventListener("error", () => {
+                        console.error(`Failed to load audio: ${sound.src}`);
+                        onAssetLoad();
+                    });
+                    sound.load();
+                });
+
+                // Fallback timeout
+                setTimeout(() => {
+                    if (loadedCount < totalAssets) {
+                        console.warn("Some assets failed to load, proceeding anyway");
+                        elements.loading.style.display = "none";
+                    }
+                }, 3000);
             }
 
             init();
