@@ -1,570 +1,516 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans,wght@1,500&display=swap" rel="stylesheet">
-    <title>Geometry game</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+    <title>Geometry Rush</title>
     <style>
-      * {
-        font-family: 'Open Sans', sans-serif;
-        box-sizing: border-box;
-        user-select: none;
-        -webkit-user-select: none;
-      }
-      body, html {
-        margin: 0;
-        padding: 0;
-        background-color: rgb(220, 227, 233);
-      }
-      #mygame {
-        width: 100%;
-        height: 70%;
-        background: aqua;
-      }
-      button {
-        width:50px;
-        height: 50px;
-        padding: 5px;
-        border: 2px outset red;
-        border-radius: 3px;
-        background: aqua;
-        color: rgb(228, 17, 17);
-        opacity: 0.7;
-      }
-      #menus {
-        position: fixed;
-        z-index: 1;
-        width: 100%;
-        height: 100%;
-        background: black;
-        opacity: 0.97;
-      }
-      #menus > p {
-        text-align: center;
-        font-size: 20px;
-        margin: 25px auto;
-        background: aqua;
-        width: 60%;
-        height: auto;
-        padding: 15px;
-        border: 3px solid red;
-        border-radius: 5px;
-      }
-      #howtoplay {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        z-index: 2;
-        background: black;
-        opacity: 0.98;
-        border-radius: 3px;
-        padding: 10px 10px 10px 10px;
-      }
-      #howtoplay:hover, #menus > p:hover {
-        cursor: pointer;
-      }
-      #pausedtextcontainer {
-        position: fixed;
-        z-index: 1;
-        background-color: black;
-        opacity: 0.92;
-        width: 100%;
-        height: 100%;
-        display: none;
-        text-align: center;
-        padding-top: 50px;
-      }
+        * {
+            font-family: 'Open Sans', sans-serif;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            margin: 0;
+            padding: 0;
+        }
 
-      #pausedtextcontainer > span {
-        text-align: center;
-        font-size: 20px;
-        margin: 25px auto;
-        background: aqua;
-        width: 60%;
-        height: auto;
-        padding: 15px;
-        border: 3px solid red;
-        border-radius: 5px;
-        display: block;
-      }
-      
+        body, html {
+            height: 100%;
+            background-color: rgb(220, 227, 233);
+            overflow: hidden;
+        }
+
+        #mygame {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            max-width: 750px;
+            max-height: 540px;
+            margin: 0 auto;
+            background: aqua;
+        }
+
+        .control-button {
+            width: 60px;
+            height: 60px;
+            margin: 10px;
+            border: 2px outset red;
+            border-radius: 5px;
+            background: aqua;
+            color: rgb(228, 17, 17);
+            font-size: 16px;
+            touch-action: manipulation;
+        }
+
+        #controls {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        #menus, #howtoplay, #pausedtextcontainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            z-index: 10;
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #menus p, #howtoplay span, #pausedtextcontainer span {
+            background: aqua;
+            color: red;
+            border: 3px solid red;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px auto;
+            width: 80%;
+            max-width: 400px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        #howtoplay span {
+            display: block;
+            font-size: 16px;
+        }
+
+        #closehowto {
+            float: right;
+            padding: 8px;
+            background: aqua;
+            color: black;
+            border: 2px outset red;
+            font-size: 14px;
+        }
+
+        #gamename {
+            text-align: center;
+            text-shadow: 1.5px 1.5px black;
+            padding: 8px;
+            color: red;
+            background: aqua;
+            opacity: 0.7;
+            font-size: 36px;
+            border: 3px outset red;
+            border-radius: 5px;
+            margin: 5px auto;
+            display: block;
+            width: fit-content;
+        }
+
+        #ingamescore, #pause, #resume {
+            position: fixed;
+            padding: 10px;
+            background: aqua;
+            border: 2px outset red;
+            border-radius: 5px;
+            color: red;
+            font-size: 16px;
+        }
+
+        #ingamescore { top: 10px; left: 10px; }
+        #pause, #resume { top: 10px; right: 10px; }
+        #resume { display: none; }
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        @media (max-width: 600px) {
+            #mygame {
+                width: 100vw;
+                height: 100vh;
+            }
+            .control-button {
+                width: 50px;
+                height: 50px;
+                font-size: 14px;
+            }
+            #gamename {
+                font-size: 28px;
+            }
+        }
     </style>
-  </head>
-  <body>
-
-<!-- in game controls -->
+</head>
+<body>
+    <div id="loading">Loading...</div>
     <div id="ingamemenus">
-      <span id="pause" style="display: none; float: right; border-radius: 5px;  background-color: aqua; color: black; text-shadow: 1px 1px rgb(255, 2, 2); padding: 10px 14px; border: 2px outset red;">|&nbsp;|</span>
-      <span id="resume" style="display: none; float: right; z-index: 2; position: relative; border-radius: 5px; background-color: aqua; color: black; text-shadow: 1px 1px rgb(255, 2, 2); padding: 10px 14px; border: 2px outset red;">|&nbsp;|</span>
-      <span id="ingamescore" style="float: left; border-radius: 5px; display: none; background-color: aqua; color: rgb(255, 0, 0); padding: 10px 14px; border: 2px outset red;">
-          score: <b id="scorenumber">0</b>
-      </span>
-      <div id="pausedtextcontainer">
-        <span id="gamepausedtext">Game paused</span>
-        <span id="pausedscore"></span>
-        <span id="quitgame">Quit Game</span>
-      </div>
-
-<!-- game name -->
-    <span id="gamename" style="text-align: center; text-shadow: 1.5px 1.5px 1.5px black; padding: 8px; color: red; background-color: aqua; opacity: .7; display: block; font-size: 40px; box-shadow: 2px 2px 5px rgb(105, 85, 85); border: 3px outset red; border-radius: 5px; margin-bottom: 2px;">Geometry Rush</span>
+        <span id="gamename">Geometry Rush</span>
+        <span id="ingamescore" style="display: none;">score: <b id="scorenumber">0</b></span>
+        <span id="pause" style="display: none;">|&nbsp;|</span>
+        <span id="resume" style="display: none;">|&nbsp;|</span>
+        <div id="pausedtextcontainer" style="display: none;">
+            <span id="gamepausedtext">Game Paused</span>
+            <span id="pausedscore"></span>
+            <span id="quitgame">Quit Game</span>
+        </div>
     </div>
-
-<!--game menus-->
-
-    <div id="menus" style="display: block;">
-      <p id="start">Start</p>
-      <p id="howto">How to play</p> 
-      <p id="bgvolume">
-        <label for="bgvolumeslider">Volume</label>
-        <input type="range" id="bgvolumeslider" min="0" max="1" step="0.2" value="1">
-      </p>
-      <p id="score" style="visibility: hidden; cursor:auto;"></p>
+    <div id="menus">
+        <p id="start">Start</p>
+        <p id="howto">How to Play</p>
+        <p id="bgvolume">
+            <label for="bgvolumeslider">Volume</label>
+            <input type="range" id="bgvolumeslider" min="0" max="1" step="0.1" value="0.5">
+        </p>
+        <p id="score" style="display: none;"></p>
+        <p id="highscore">High Score: <b id="highscorenumber">0</b></p>
     </div>
-    <span id="howtoplay" style="display:none; color: rgb(151, 211, 211);">  
-    <span style="padding: 5px; background-color: aqua; color: red; border: 2px outset red; display: block; border-radius: 5px;">
-      Use the left, right, up and down buttons to navigate the player square (red square). <br>Eat coins to increase score and try not to bump into any obstacles (black squares) or you loose.<br>The higher your score, the more the speed of the obstacles increase. Have fun <br><br> More updates on the game coming soon.<br><br>
-      <span style="margin-top:10px; float: right;  color: black; border-radius: 5px; padding: 8px; background-color: aqua; font-size:15px; border: 2px outset rgb(199, 57, 57);" id="closehowto"><b style="color: red;">close</b></span>
-    </span>
-    </span>
-    <!--canvas-->
-    <canvas style="margin-top: 2px;" id="mygame" width="750" height="540"></canvas>
-    <!--controls-->
-    <button id="left" style="margin-left:20px; margin-top:50px;">left</button>
-    <button id="right" style="margin-left:20px; margin-top:50px;">right</button>
-    <button id="up" style="float:right; margin-top:10px; margin-right:30px;">up</button><br>
-    <button id="down"style="float:right; margin-right:30px;">down</button>
-
-    <audio id="clicktone" src="clicktone.wav" ></audio>
+    <div id="howtoplay" style="display: none; color: rgb(151, 211, 211);">
+        <span>
+            Use the left, right, up, and down buttons (or arrow keys on desktop) to navigate the red square.<br>
+            Collect coins to increase your score and avoid black obstacles to survive.<br>
+            The game speed increases with your score. Have fun!<br><br>
+            More updates coming soon.<br><br>
+            <span id="closehowto"><b style="color: red;">Close</b></span>
+        </span>
+    </div>
+    <canvas id="mygame"></canvas>
+    <div id="controls">
+        <button class="control-button" id="left">Left</button>
+        <button class="control-button" id="right">Right</button>
+        <button class="control-button" id="up">Up</button>
+        <button class="control-button" id="down">Down</button>
+    </div>
+    <audio id="clicktone" src="clicktone.wav"></audio>
     <audio id="eatcointone" src="eatcointone.wav"></audio>
-    <audio id="gamebackgroundsound" src="backgroundmusic.mp3" loop ></audio>
+    <audio id="gamebackgroundsound" src="backgroundmusic.mp3" loop></audio>
     <audio id="collisiontone" src="collisiontone.wav"></audio>
 
     <script>
+        (function () {
+            // DOM elements
+            const elements = {
+                gamename: document.getElementById("gamename"),
+                pausedscore: document.getElementById("pausedscore"),
+                pause: document.getElementById("pause"),
+                resume: document.getElementById("resume"),
+                pausecontainer: document.getElementById("pausedtextcontainer"),
+                quitgame: document.getElementById("quitgame"),
+                scorenumber: document.getElementById("scorenumber"),
+                ingamescore: document.getElementById("ingamescore"),
+                menus: document.getElementById("menus"),
+                start: document.getElementById("start"),
+                howto: document.getElementById("howto"),
+                closehowto: document.getElementById("closehowto"),
+                scoremenu: document.getElementById("score"),
+                highscorenumber: document.getElementById("highscorenumber"),
+                canvas: document.getElementById("mygame"),
+                loading: document.getElementById("loading"),
+                bgsound: document.getElementById("gamebackgroundsound"),
+                clicktone: document.getElementById("clicktone"),
+                eatcointone: document.getElementById("eatcointone"),
+                collisiontone: document.getElementById("collisiontone")
+            };
 
+            const ctx = elements.canvas.getContext("2d");
+            let gameState = {
+                score: 0,
+                highscore: localStorage.getItem("highscore") || 0,
+                speed: 250,
+                objspeed: 150,
+                player: { x: 100, y: 455 },
+                coin: { x: 100, y: 100 },
+                obstacles: [
+                    { x: 750, y: 250 },
+                    { x: 800, y: 200 },
+                    { x: 900, y: 100 },
+                    { x: 950, y: 150 },
+                    { x: 850, y: 350 },
+                    { x: 1000, y: 250 }
+                ],
+                direction: 0,
+                isPaused: false,
+                isGameRunning: false,
+                lastTime: Date.now()
+            };
 
-      
-    window.onload = function gamestart() {
+            // Canvas setup
+            function resizeCanvas() {
+                const aspectRatio = 750 / 540;
+                let width = window.innerWidth;
+                let height = window.innerHeight;
+                if (width / height > aspectRatio) {
+                    width = height * aspectRatio;
+                } else {
+                    height = width / aspectRatio;
+                }
+                elements.canvas.width = width;
+                elements.canvas.height = height;
+                elements.canvas.style.width = `${width}px`;
+                elements.canvas.style.height = `${height}px`;
+            }
 
-      var gamename = document.getElementById("gamename");
-      var pausedscore = document.getElementById("pausedscore");
-      var pause = document.getElementById("pause");
-      var pausecontainer = document.getElementById("pausedtextcontainer");
-      var quitgame = document.getElementById("quitgame");
-      var resume = document.getElementById("resume");
-      var scorenumber = document.getElementById("scorenumber");
-      var eatcointone = document.getElementById("eatcointone");
-      var howto = document.getElementById("howto");
-      var closehowto = document.getElementById("closehowto");
-      var scoremenu = document.getElementById("score");
-      var menus = document.getElementById("menus");
-      var start = document.getElementById("start");
-      var canvas = document.getElementById("mygame");
-      var context = canvas.getContext("2d");
-      var t = Date.now();
-      var score = 0;
-      var speed = 250;
-      var x = 100;
-      var y = 455;
-      var coinx = 100;
-      var coiny = 100;
-      var dir = 0;
-      var left = document.getElementById("left");
-      var right = document.getElementById("right");
-      var up = document.getElementById("up");
-      var down = document.getElementById("down");
-      var obx = 750;
-      var oby = 250;
-      var obx2 = 800;
-      var oby2 = 200;
-      var obx3 = 900;
-      var oby3 = 100;
-      var obx4 = 950;
-      var oby4 = 150;
-      var obx5 = 850;
-      var oby5 = 350;
-      var obx6 = 1000;
-      var oby6 = 250;
-      var objs = 150;
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
 
-      menus.style.display="block;"
-      howto.onclick = function() {
-        playclicksound();
-        document.getElementById("howtoplay").style.display="block";
-      }
-      closehowto.onclick = function() {
-        playclicksound();
-        document.getElementById("howtoplay").style.display="none";
-      }
-      function ingamemunus() {
-        gamename.style.display="none";
-        ingamescore.style.display="block";
-        if (objs != 0) {
-          pause.style.display="block";
-        }
-      }
-      function exgamemenus () {
-        gamename.style.display="block";
-        pause.style.display="none";
-        resume.style.display="none";
-        ingamescore.style.display="none";
-      }
+            // Audio handling
+            function unlockAudio() {
+                const sounds = [elements.bgsound, elements.clicktone, elements.eatcointone, elements.collisiontone];
+                sounds.forEach(sound => {
+                    sound.play().then(() => sound.pause()).catch(() => {});
+                    sound.currentTime = 0;
+                });
+            }
 
-//game sounds
-      function playbackgroundsound() {
-      var volumeslider = document.getElementById("bgvolumeslider");
-      var bgsound = document.getElementById("gamebackgroundsound");
-      volumeslider.addEventListener("input", function() {
-      bgsound.volume = volumeslider.value;
-      });
-      bgsound.currentTime = 0;
-      bgsound.play();
-      }
-      function pausebackgroundsound() {
-      var pbgsound = document.getElementById("gamebackgroundsound");
-      pbgsound.pause();
-      }
-      function playclicksound() {
-      var clicktone = document.getElementById("clicktone");
-      clicktone.currentTime = 0; 
-      clicktone.play();
-      }
-      function playcollisionsound() {
-      var collisiontone = document.getElementById("collisiontone");
-      collisiontone.currentTime = 0; 
-      collisiontone.play();
-      }
-      function playcoinsound() {
-      var eatcointone = document.getElementById("eatcointone");
-      eatcointone.currentTime = 0;
-      eatcointone.play();
-      }
-      
-//gamestart function
-      start.onclick = function () {
-        playclicksound();
-        playbackgroundsound();
-        game();
-      }
-    
-    function game() {
-//time passed is divided by 1000 to get the time at which our animation would run; multiplied by the set speed
-      var tp = (Date.now() - t) / 1000;
-      t = Date.now();
+            elements.bgsound.volume = 0.5;
+            elements.bgvolumeslider.addEventListener("input", () => {
+                elements.bgsound.volume = elements.bgvolumeslider.value;
+            });
 
-//pause, quit and resume functionality
-    var ispaused = false;
-    pause.onclick = function pausegame() {
-      ispaused = !ispaused;
-      if (ispaused) {
-        objs = 0;
-        speed = 0;
-        pause.style.display = "none";
-        resume.style.display = "block";
-        pausecontainer.style.display = "block";
-        pausedscore.innerHTML="score: " + scorenumber;
-      } else {
-        objs = 150;
-        speed = 250;
-      }
-    }
-    var isresumed = false;
-    resume.onclick = function resumegame() {
-      isresumed = !isresumed;
-      if (isresumed) {
-        objs = 150;
-        speed = 250;
-        pause.style.display = "block";
-        resume.style.display = "none";
-        pausecontainer.style.display = "none";
-      } else {
-        objs = 0;
-        speed = 0;
-      }
-    }
-    var isquit = false;
-    function quitgame() {
-      isquit = !isquit;
-      if (isquit) {
-          pausebackgroundsound();
-          stopobj();
-          playcollisionsound();
-          exgamemenus();
-          menus.style.display="block";
-        scoremenu.style.visibility = "visible";
-          pausecontainer.style.display = "none";
-          scoremenu.innerHTML = "score: " + score;
-          start.innerHTML = "Restart";
-          scorenumber.innerHTML = 0;
-          return gamestart();
-      } 
-    }
-          
+            function playSound(sound) {
+                sound.currentTime = 0;
+                sound.play().catch(() => {});
+            }
 
-//clearRect is used here to cover the whole canvas so when an animation runs, it clears the old drawn frame and draws new ones
-      context.clearRect(0, 0, 750, 540);
-//score text
-      context.font="0px sans serif";
-      context.fillStyle="red";
-      context.fillText("score: "+ score, 10, 20);
-//players square drawing
-      context.beginPath();
-      context.rect(x, y, 50,50);
-      context.fillStyle="red";
-      context.fill();
-      context.lineWidth="5";
-      context.strokeStyle="black";
-      context.stroke();
-//coin drawing
-      context.beginPath();
-      context.arc(coinx, coiny, 12, 0, 2 * Math.PI);
-      context.fillStyle="gold";
-      context.fill();
-      context.lineWidth="2";
-      context.strokeStyle="black";
-      context.stroke();
-//obstacles drawing
-      context.beginPath();
-      context.rect(obx, oby, 50,50);
-      context.fillStyle="black";
-      context.fill();
+            // Game controls
+            function setupControls() {
+                const buttons = {
+                    left: document.getElementById("left"),
+                    right: document.getElementById("right"),
+                    up: document.getElementById("up"),
+                    down: document.getElementById("down")
+                };
 
-      context.beginPath();
-      context.rect(obx2, oby2, 50,50);
-      context.fillStyle="black";
-      context.fill();
+                const handleInput = (dir, state) => {
+                    gameState.direction = state ? dir : 0;
+                    if (state) playSound(elements.clicktone);
+                };
 
-      context.beginPath();
-      context.rect(obx3, oby3, 50,50);
-      context.fillStyle="black";
-      context.fill();
+                buttons.left.addEventListener("mousedown", () => handleInput(1, true));
+                buttons.right.addEventListener("mousedown", () => handleInput(2, true));
+                buttons.up.addEventListener("mousedown", () => handleInput(3, true));
+                buttons.down.addEventListener("mousedown", () => handleInput(4, true));
 
-      context.beginPath();
-      context.rect(obx4, oby4, 50,50);
-      context.fillStyle="black";
-      context.fill();
+                buttons.left.addEventListener("mouseup", () => handleInput(0, false));
+                buttons.right.addEventListener("mouseup", () => handleInput(0, false));
+                buttons.up.addEventListener("mouseup", () => handleInput(0, false));
+                buttons.down.addEventListener("mouseup", () => handleInput(0, false));
 
-      context.beginPath();
-      context.rect(obx5, oby5, 50,50);
-      context.fillStyle="black";
-      context.fill();
+                buttons.left.addEventListener("touchstart", e => { e.preventDefault(); handleInput(1, true); });
+                buttons.right.addEventListener("touchstart", e => { e.preventDefault(); handleInput(2, true); });
+                buttons.up.addEventListener("touchstart", e => { e.preventDefault(); handleInput(3, true); });
+                buttons.down.addEventListener("touchstart", e => { e.preventDefault(); handleInput(4, true); });
 
-      context.beginPath();
-      context.rect(obx6, oby6, 50,50);
-      context.fillStyle="black";
-      context.fill();
+                buttons.left.addEventListener("touchend", () => handleInput(0, false));
+                buttons.right.addEventListener("touchend", () => handleInput(0, false));
+                buttons.up.addEventListener("touchend", () => handleInput(0, false));
+                buttons.down.addEventListener("touchend", () => handleInput(0, false));
 
-//click events for movement controls with direction
-            left.onmousedown = function() { dir = 1; }
-            right.onmousedown = function() { dir = 2; }
-            up.onmousedown = function() { dir = 3; }
-            down.onmousedown = function() { dir = 4; }
+                // Keyboard support
+                window.addEventListener("keydown", e => {
+                    if (e.key === "ArrowLeft") handleInput(1, true);
+                    if (e.key === "ArrowRight") handleInput(2, true);
+                    if (e.key === "ArrowUp") handleInput(3, true);
+                    if (e.key === "ArrowDown") handleInput(4, true);
+                });
+                window.addEventListener("keyup", e => {
+                    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) handleInput(0, false);
+                });
+            }
 
-            left.onmouseup = function() { dir = 0; }
-            right.onmouseup = function() { dir = 0; }
-            up.onmouseup = function() { dir = 0; }
-            down.onmouseup = function() { dir = 0; }
+            // Game logic
+            function randomizeCoin() {
+                gameState.coin.x = Math.random() * (elements.canvas.width - 50) + 25;
+                gameState.coin.y = Math.random() * (elements.canvas.height - 50) + 25;
+            }
 
-            left.ontouchstart = function() { dir = 1; }
-            right.ontouchstart = function() { dir = 2; }
-            up.ontouchstart = function() { dir = 3; }
-            down.ontouchstart = function() { dir = 4; }
+            function randomizeObstacle(index) {
+                gameState.obstacles[index].x = elements.canvas.width + Math.random() * 100;
+                gameState.obstacles[index].y = Math.random() * (elements.canvas.height - 50) + 25;
+            }
 
-            left.ontouchend = function() { dir = 0; }
-            right.ontouchend = function() { dir = 0; }
-            up.ontouchend = function() { dir = 0; }
-            down.ontouchend = function() { dir = 0; }
-//conditions to correspond with the movement buttons
-      if (dir == 1) {
-        if (x >= 0 + 5) {
-          x -= (speed * tp);
-        }
-      }
-      if (dir == 2) {
-        if (x <= 750 - 55) {
-          x += (speed * tp);
-        }
-      }
-      if (dir == 3) {
-        if (y >= 0 + 6) {
-          y -= (speed * tp);
-        }
-      }
-      if (dir == 4) {
-        if (y <= 540 - 55) {
-          y += (speed * tp);
-        }
-      }
-//function for the coin randomization
-      function coinfunc() {
-        coinx = Math.round((Math.random() * 550) + 20);
-        coiny = Math.round((Math.random() * 500) + 30);
-      }
-//functions and conditions for obstacles' randomization
-      function objfunc() {
-        obx = (Math.random() * 10) * (Math.random() * 10) + 750;
-        oby = (Math.random() * 490) + 20;
-      }
-      function obj2func() {
-        obx2 = (Math.random() * 10) * (Math.random() * 10) + 900;
-        oby2 = (Math.random() * 490) + 25;
-      }
-      function obj3func() {
-        obx3 = (Math.random() * 10) * (Math.random() * 10) + 850;
-        oby3 = (Math.random() * 490) + 20;
-      }
-      function obj4func() {
-        obx4 = (Math.random() * 10) * (Math.random() * 10) + 800;
-        oby4 = (Math.random() * 490) + 26;
-      }
-      function obj5func() {
-        obx5 = (Math.random() * 10) * (Math.random() * 10) + 950;
-        oby5 = (Math.random() * 490) + 20;
-      }
-      function obj6func() {
-        obx6 = (Math.random() * 10) * (Math.random() * 10) + 1000;
-        oby6 = (Math.random() * 490) + 25;
-      }
-      if (obx <= 0-50) {
-        objfunc();
-      }
-      if (obx2 <= 0-50) {
-        obj2func();
-      }
-      if (obx3 <= 0-50) {
-        obj3func();
-      }
-      if (obx4 <= 0-50) {
-        obj4func();
-      }
-      if (obx5 <= 0-50) {
-        obj5func();
-      }
-      if (obx6 <= 0-50) {
-        obj6func();
-      }
-      function stopobj() {
-        objs = 0;
-        speed = 0;
-        menus.style.display="block";
-      }
-//coin and player square collision conditions
-      if (x <= coinx + 11 && coinx - 11 <= x + 55 && y <= coiny + 11 && coiny - 11 <= y + 55) {
-        score += 1;
-        scorenumber.innerHTML = score;
-        playcoinsound();
-        coinfunc();
-      }
-//obstacles' movement
+            function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
+                return x1 < x2 + w2 && x2 < x1 + w1 && y1 < y2 + h2 && y2 < y1 + h1;
+            }
 
-      obx -= (objs * tp);
-      obx2 -= (objs * tp);
-      obx3 -= (objs * tp);
-      obx4 -= (objs * tp);
-      obx5 -= (objs * tp);
-      obx6 -= (objs * tp);
-//obstacle and player collision conditions
-      if (obx <= x + 50 && x <= obx + 50 && oby <= y + 50 && y <= oby + 50) {
-        pausebackgroundsound();
-        stopobj();
-        playcollisionsound();
-        scoremenu.style.visibility="visible";
-        scoremenu.innerHTML="score: " + score;
-        start.innerHTML="Restart";
-        exgamemenus();
-        scorenumber.innerHTML = 0;
-        return gamestart();
-      } else {
-        menus.style.display="none";
-        ingamemunus();
-        scoremenu.innerHTML = score;
-      }
-      if (x <= obx2 + 50 && obx2 <= x + 50 && y <= oby2 + 50 && oby2 <= y + 50) {
-        pausebackgroundsound();
-        stopobj();
-        playcollisionsound();
-        scoremenu.style.visibility="visible";
-        scoremenu.innerHTML="score: " + score;
-        start.innerHTML="Restart";
-        exgamemenus();
-        scorenumber.innerHTML = 0;
-        return gamestart();
-      } else {
-        menus.style.display="none";
-        ingamemunus();
-        scorenumber.innerHTML = score;
-      }
-      if (x <= obx3 + 50 && obx3 <= x + 50 && y <= oby3 + 50 && oby3 <= y + 50) {
-        pausebackgroundsound();
-        stopobj();
-        playcollisionsound();
-        scoremenu.style.visibility="visible";
-        scoremenu.innerHTML="score: " + score;
-        start.innerHTML="Restart";
-        exgamemenus();
-        scorenumber.innerHTML = 0;
-        return gamestart();
-      } else {
-        menus.style.display="none";
-        ingamemunus();
-        scorenumber.innerHTML = score;
-      }
-      if (x <= obx4 + 50 && obx4 <= x + 50 && y <= oby4 + 50 && oby4 <= y + 50) {
-        pausebackgroundsound();
-        stopobj();
-        playcollisionsound();
-        scoremenu.style.visibility="visible";
-        scoremenu.innerHTML="score: " + score;
-        start.innerHTML="Restart";
-        exgamemenus();
-        scorenumber.innerHTML = 0;
-        return gamestart();
-      } else {
-        menus.style.display="none";
-        ingamemunus();
-        scorenumber.innerHTML = score;
-      }
-      if (x <= obx5 + 50 && obx5 <= x + 50 && y <= oby5 + 50 && oby5 <= y + 50) {
-        pausebackgroundsound();
-        stopobj();
-        playcollisionsound();
-        scoremenu.style.visibility="visible";
-        scoremenu.innerHTML="score: " + score;
-        start.innerHTML="Restart";
-        exgamemenus();
-        scorenumber.innerHTML = 0;
-        return gamestart();
-      } else {
-        menus.style.display="none";
-        ingamemunus();
-        scorenumber.innerHTML = score;
-      }
-      if (x <= obx6 + 50 && obx6 <= x + 50 && y <= oby6 + 50 && oby6 <= y + 50) {
-        pausebackgroundsound();
-        stopobj();
-        playcollisionsound();
-        scoremenu.style.visibility="visible";
-        scoremenu.innerHTML="score: " + score;
-        start.innerHTML="Restart";
-        exgamemenus();
-        
-        scorenumber.innerHTML = 0;
-        return gamestart();
-      } else {
-        menus.style.display="none";
-        ingamemunus();
-        scorenumber.innerHTML = score;
-      }
-      
-      //animation frame request
-      window.requestAnimationFrame(game);
-    }
-    }
-  
+            function updateGame() {
+                const now = Date.now();
+                const deltaTime = (now - gameState.lastTime) / 1000;
+                gameState.lastTime = now;
+
+                if (gameState.isPaused || !gameState.isGameRunning) return;
+
+                // Player movement
+                const playerSpeed = gameState.speed * deltaTime;
+                if (gameState.direction === 1 && gameState.player.x >= 5) gameState.player.x -= playerSpeed;
+                if (gameState.direction === 2 && gameState.player.x <= elements.canvas.width - 55) gameState.player.x += playerSpeed;
+                if (gameState.direction === 3 && gameState.player.y >= 5) gameState.player.y -= playerSpeed;
+                if (gameState.direction === 4 && gameState.player.y <= elements.canvas.height - 55) gameState.player.y += playerSpeed;
+
+                // Coin collision
+                if (checkCollision(gameState.player.x, gameState.player.y, 50, 50, gameState.coin.x - 12, gameState.coin.y - 12, 24, 24)) {
+                    gameState.score++;
+                    elements.scorenumber.textContent = gameState.score;
+                    playSound(elements.eatcointone);
+                    randomizeCoin();
+                    gameState.objspeed += 10; // Increase difficulty
+                }
+
+                // Obstacle movement and collision
+                gameState.obstacles.forEach((ob, i) => {
+                    ob.x -= gameState.objspeed * deltaTime;
+                    if (ob.x < -50) randomizeObstacle(i);
+                    if (checkCollision(gameState.player.x, gameState.player.y, 50, 50, ob.x, ob.y, 50, 50)) {
+                        endGame();
+                    }
+                });
+            }
+
+            function renderGame() {
+                ctx.clearRect(0, 0, elements.canvas.width, elements.canvas.height);
+
+                // Draw player
+                ctx.beginPath();
+                ctx.rect(gameState.player.x, gameState.player.y, 50, 50);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = "black";
+                ctx.stroke();
+
+                // Draw coin
+                ctx.beginPath();
+                ctx.arc(gameState.coin.x, gameState.coin.y, 12, 0, 2 * Math.PI);
+                ctx.fillStyle = "gold";
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "black";
+                ctx.stroke();
+
+                // Draw obstacles
+                gameState.obstacles.forEach(ob => {
+                    ctx.beginPath();
+                    ctx.rect(ob.x, ob.y, 50, 50);
+                    ctx.fillStyle = "black";
+                    ctx.fill();
+                });
+            }
+
+            function gameLoop() {
+                updateGame();
+                renderGame();
+                if (gameState.isGameRunning) requestAnimationFrame(gameLoop);
+            }
+
+            function startGame() {
+                unlockAudio();
+                playSound(elements.bgsound);
+                elements.canvas.requestFullscreen?.();
+                gameState.isGameRunning = true;
+                gameState.isPaused = false;
+                gameState.score = 0;
+                gameState.objspeed = 150;
+                gameState.speed = 250;
+                gameState.player = { x: 100, y: elements.canvas.height - 85 };
+                gameState.obstacles.forEach((_, i) => randomizeObstacle(i));
+                randomizeCoin();
+                elements.menus.style.display = "none";
+                elements.gamename.style.display = "none";
+                elements.ingamescore.style.display = "block";
+                elements.pause.style.display = "block";
+                elements.scorenumber.textContent = "0";
+                elements.start.textContent = "Restart";
+                gameLoop();
+            }
+
+            function endGame() {
+                playSound(elements.collisiontone);
+                elements.bgsound.pause();
+                gameState.isGameRunning = false;
+                elements.menus.style.display = "block";
+                elements.gamename.style.display = "block";
+                elements.ingamescore.style.display = "none";
+                elements.pause.style.display = "none";
+                elements.resume.style.display = "none";
+                elements.scoremenu.style.display = "block";
+                elements.scoremenu.textContent = `Score: ${gameState.score}`;
+                if (gameState.score > gameState.highscore) {
+                    gameState.highscore = gameState.score;
+                    localStorage.setItem("highscore", gameState.highscore);
+                    elements.highscorenumber.textContent = gameState.highscore;
+                }
+                resetGameState();
+            }
+
+            function resetGameState() {
+                gameState.score = 0;
+                gameState.objspeed = 150;
+                gameState.speed = 250;
+                gameState.player = { x: 100, y: elements.canvas.height - 85 };
+                gameState.direction = 0;
+                elements.scorenumber.textContent = "0";
+            }
+
+            // Event listeners
+            elements.start.addEventListener("click", () => {
+                playSound(elements.clicktone);
+                startGame();
+            });
+
+            elements.howto.addEventListener("click", () => {
+                playSound(elements.clicktone);
+                elements.howtoplay.style.display = "block";
+            });
+
+            elements.closehowto.addEventListener("click", () => {
+                playSound(elements.clicktone);
+                elements.howtoplay.style.display = "none";
+            });
+
+            elements.pause.addEventListener("click", () => {
+                gameState.isPaused = true;
+                elements.pause.style.display = "none";
+                elements.resume.style.display = "block";
+                elements.pausecontainer.style.display = "block";
+                elements.pausedscore.textContent = `Score: ${gameState.score}`;
+                elements.bgsound.pause();
+            });
+
+            elements.resume.addEventListener("click", () => {
+                gameState.isPaused = false;
+                elements.pause.style.display = "block";
+                elements.resume.style.display = "none";
+                elements.pausecontainer.style.display = "none";
+                elements.bgsound.play();
+                gameState.lastTime = Date.now();
+                gameLoop();
+            });
+
+            elements.quitgame.addEventListener("click", () => {
+                playSound(elements.clicktone);
+                endGame();
+            });
+
+            // Initialize
+            function init() {
+                elements.highscorenumber.textContent = gameState.highscore;
+                elements.menus.style.display = "block";
+                setupControls();
+                setTimeout(() => elements.loading.style.display = "none", 1000);
+            }
+
+            init();
+        })();
     </script>
-  </body>
+</body>
 </html>
-
