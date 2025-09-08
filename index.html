@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="theme-color" content="#00FFFF">
     <meta name="description" content="Geometry Rush - A fast-paced mobile game!">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/public/manifest.json">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -272,7 +272,8 @@
                 bgsound: document.getElementById("gamebackgroundsound"),
                 clicktone: document.getElementById("clicktone"),
                 eatcointone: document.getElementById("eatcointone"),
-                collisiontone: document.getElementById("collisiontone")
+                collisiontone: document.getElementById("collisiontone"),
+                bgvolumeslider: document.getElementById("bgvolumeslider")
             };
 
             const ctx = elements.canvas.getContext("2d");
@@ -302,7 +303,7 @@
             // PWA Service Worker
             if ("serviceWorker" in navigator) {
                 window.addEventListener("load", () => {
-                    navigator.serviceWorker.register("/sw.js").catch(err => console.error("Service Worker registration failed:", err));
+                    navigator.serviceWorker.register("/public/sw.js").catch(err => console.error("Service Worker registration failed:", err));
                 });
             }
 
@@ -331,20 +332,31 @@
             function unlockAudio() {
                 const sounds = [elements.bgsound, elements.clicktone, elements.eatcointone, elements.collisiontone];
                 sounds.forEach(sound => {
-                    sound.play().then(() => sound.pause()).catch(() => {});
-                    sound.currentTime = 0;
+                    if (sound) {
+                        sound.play().then(() => sound.pause()).catch(err => console.error(`Audio unlock failed for ${sound.src}:`, err));
+                        sound.currentTime = 0;
+                    }
                 });
             }
 
-            elements.bgsound.volume = 0.5;
-            elements.bgvolumeslider.addEventListener("input", () => {
-                elements.bgsound.volume = elements.bgvolumeslider.value;
-            });
+            if (elements.bgvolumeslider) {
+                elements.bgsound.volume = elements.bgvolumeslider.value || 0.5;
+                elements.bgvolumeslider.addEventListener("input", () => {
+                    if (elements.bgsound) {
+                        elements.bgsound.volume = elements.bgvolumeslider.value;
+                    }
+                });
+            } else {
+                console.warn("Volume slider not found, using default volume");
+                elements.bgsound.volume = 0.5;
+            }
 
             function playSound(sound, vibrate = false) {
-                sound.currentTime = 0;
-                sound.play().catch(() => {});
-                if (vibrate && navigator.vibrate) navigator.vibrate(50);
+                if (sound) {
+                    sound.currentTime = 0;
+                    sound.play().catch(err => console.error(`Sound play failed for ${sound.src}:`, err));
+                    if (vibrate && navigator.vibrate) navigator.vibrate(50);
+                }
             }
 
             // Swipe controls
@@ -643,6 +655,12 @@
 
             // Initialize
             function init() {
+                if (!elements.highscorenumber || !elements.menus || !elements.canvas) {
+                    console.error("Critical DOM elements missing, aborting initialization");
+                    elements.loading.textContent = "Error: Game failed to load. Please refresh.";
+                    return;
+                }
+
                 elements.highscorenumber.textContent = gameState.highscore;
                 elements.menus.style.display = "block";
                 setupControls();
@@ -654,19 +672,24 @@
 
                 function onAssetLoad() {
                     loadedCount++;
-                    if (loadedCount >= totalAssets || Date.now() - gameState.lastTime > 3000) {
+                    if (loadedCount >= totalAssets || Date.now() - gameState.lastTime > 5000) {
                         elements.loading.style.display = "none";
                         console.log("Assets loaded or timeout reached");
                     }
                 }
 
                 sounds.forEach(sound => {
-                    sound.addEventListener("canplaythrough", onAssetLoad, { once: true });
-                    sound.addEventListener("error", () => {
-                        console.error(`Failed to load audio: ${sound.src}`);
+                    if (sound) {
+                        sound.addEventListener("canplaythrough", onAssetLoad, { once: true });
+                        sound.addEventListener("error", () => {
+                            console.error(`Failed to load audio: ${sound.src}`);
+                            onAssetLoad();
+                        });
+                        sound.load();
+                    } else {
+                        console.warn("Audio element missing, skipping");
                         onAssetLoad();
-                    });
-                    sound.load();
+                    }
                 });
 
                 // Fallback timeout
@@ -675,10 +698,10 @@
                         console.warn("Some assets failed to load, proceeding anyway");
                         elements.loading.style.display = "none";
                     }
-                }, 3000);
+                }, 5000);
             }
 
-            init();
+            document.addEventListener("DOMContentLoaded", init);
         })();
     </script>
 </body>
