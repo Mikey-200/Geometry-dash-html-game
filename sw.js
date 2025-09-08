@@ -8,8 +8,10 @@ self.addEventListener("install", event => {
                 "/eatcointone.wav",
                 "/backgroundmusic.mp3",
                 "/collisiontone.wav",
-                "/public/icon-192.png",
-                "/public/icon-512.png"
+                "/icon-192.png",
+                "/icon-512.png",
+                "/manifest.json",
+                "/sw.js"
             ]);
         })
     );
